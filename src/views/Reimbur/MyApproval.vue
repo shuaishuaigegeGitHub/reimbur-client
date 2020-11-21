@@ -4,11 +4,7 @@
       <el-col :span="20">
         <el-form :inline="true">
           <el-form-item>
-            <el-select
-              v-model="filters.status"
-              @change="query"
-              style="width: 120px"
-            >
+            <el-select v-model="filters.status" @change="query" style="width: 120px">
               <el-option
                 v-for="item in statusList"
                 :key="item.value"
@@ -32,22 +28,12 @@
         </el-form>
       </el-col>
       <el-col :span="4" align="right">
-        <el-button size="small" type="primary" @click="handleApply"
-          >付款申请</el-button
-        >
+        <el-button size="small" type="primary" @click="handleApply">付款申请</el-button>
       </el-col>
     </el-row>
     <el-table :data="list" border>
-      <el-table-column
-        label="申请人"
-        prop="applicant"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        label="付款类型"
-        prop="flow_params.apply_type"
-        align="center"
-      ></el-table-column>
+      <el-table-column label="申请人" prop="applicant" align="center"></el-table-column>
+      <el-table-column label="付款类型" prop="flow_params.apply_type" align="center"></el-table-column>
       <el-table-column label="状态" prop="status" align="center">
         <template slot-scope="{ row }">
           <el-tag v-if="row.status === 1">
@@ -59,20 +45,12 @@
           <el-tag v-else>未知状态</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        label="申请时间"
-        prop="createtime"
-        align="center"
-      ></el-table-column>
+      <el-table-column label="申请时间" prop="createtime" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="{ row }">
-          <el-button
-            type="primary"
-            size="small"
-            plain
-            @click="handleShow(row)"
-            >{{ row.status == 1 && !row.refext ? '审批' : '查看' }}</el-button
-          >
+          <el-button type="primary" size="small" plain @click="handleShow(row)">{{
+            row.status == 1 && !row.refext ? '审批' : '查看'
+          }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -90,12 +68,7 @@
       </el-pagination>
     </div>
 
-    <el-drawer
-      title="报销申请单"
-      :visible.sync="drawer.visible"
-      direction="rtl"
-      size="500px"
-    >
+    <el-drawer title="报销申请单" :visible.sync="drawer.visible" direction="rtl" size="500px">
       <div class="drawer-body">
         <bao-xiao-detail
           class="bao-xiao-detail"
@@ -103,11 +76,7 @@
           :data="drawer.data.flow_params"
           :instance-id="drawer.data.instance_id"
         ></bao-xiao-detail>
-        <el-row
-          v-if="drawer.data.status === 1 && this.drawer.data.refext === ''"
-          class="detail-footer"
-          :gutter="30"
-        >
+        <el-row v-if="drawer.data.status === 1 && this.drawer.data.refext === ''" class="detail-footer" :gutter="30">
           <el-col :span="24">
             <el-input
               v-model.trim="form.remark"
@@ -119,9 +88,7 @@
           </el-col>
 
           <el-col :span="12">
-            <el-button style="width: 100%" @click="handleReject"
-              >驳 回</el-button
-            >
+            <el-button style="width: 100%" @click="handleReject">驳 回</el-button>
           </el-col>
           <el-col :span="12">
             <el-button
@@ -131,13 +98,7 @@
               @click="handleTransfer"
               >转 账</el-button
             >
-            <el-button
-              v-else
-              style="width: 100%"
-              type="primary"
-              @click="handleThen"
-              >同 意</el-button
-            >
+            <el-button v-else style="width: 100%" type="primary" @click="handleThen">同 意</el-button>
           </el-col>
         </el-row>
       </div>
@@ -188,7 +149,7 @@ export default {
   },
   methods: {
     handleApply() {
-      this.$router.push({ path: '/baoxiao/add' });
+      this.$router.push({ path: '/reimbur/add' });
     },
     handleShow(row) {
       this.drawer.visible = true;
@@ -196,7 +157,7 @@ export default {
     },
     async query() {
       const res = await this.$axios({
-        url: '/api/bao-xiao/query-my-shenpi',
+        url: '/api/reimbur/query-my-shenpi',
         method: 'POST',
         data: this.filters
       });
@@ -214,7 +175,7 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         this.$axios({
-          url: '/api/bao-xiao/reject',
+          url: '/api/reimbur/reject',
           method: 'POST',
           data: {
             id: this.drawer.data.id,
@@ -246,7 +207,7 @@ export default {
         cancelButtonText: '取消'
       }).then(() => {
         this.$axios({
-          url: '/api/bao-xiao/complete',
+          url: '/api/reimbur/complete',
           method: 'POST',
           data: {
             id: this.drawer.data.id,
@@ -281,7 +242,7 @@ export default {
         }
       ).then(() => {
         this.$axios({
-          url: '/api/bao-xiao/transfer',
+          url: '/api/reimbur/transfer',
           method: 'POST',
           data: {
             id: this.drawer.data.id,

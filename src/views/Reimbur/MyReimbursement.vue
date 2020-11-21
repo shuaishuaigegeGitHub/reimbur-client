@@ -4,11 +4,7 @@
       <el-col :span="20">
         <el-form :inline="true">
           <el-form-item>
-            <el-select
-              v-model="filters.status"
-              @change="query"
-              style="width: 120px"
-            >
+            <el-select v-model="filters.status" @change="query" style="width: 120px">
               <el-option
                 v-for="item in statusList"
                 :key="item.value"
@@ -32,17 +28,11 @@
         </el-form>
       </el-col>
       <el-col :span="4" align="right">
-        <el-button size="small" type="primary" @click="handleApply"
-          >付款申请</el-button
-        >
+        <el-button size="small" type="primary" @click="handleApply">付款申请</el-button>
       </el-col>
     </el-row>
     <el-table :data="list" border>
-      <el-table-column
-        label="填单人"
-        prop="create_by"
-        align="center"
-      ></el-table-column>
+      <el-table-column label="填单人" prop="create_by" align="center"></el-table-column>
       <el-table-column
         label="付款类型"
         prop="flow_params.apply_type"
@@ -58,29 +48,12 @@
           <el-tag v-else>未知状态</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        label="申请时间"
-        prop="createtime"
-        align="center"
-        min-width="200px"
-      ></el-table-column>
-      <el-table-column
-        label="最近一次操作人"
-        prop="update_by"
-        align="center"
-        min-width="150px"
-      ></el-table-column>
-      <el-table-column
-        label="最近一次操作时间"
-        prop="updatetime"
-        align="center"
-        min-width="200px"
-      ></el-table-column>
+      <el-table-column label="申请时间" prop="createtime" align="center" min-width="200px"></el-table-column>
+      <el-table-column label="最近一次操作人" prop="update_by" align="center" min-width="150px"></el-table-column>
+      <el-table-column label="最近一次操作时间" prop="updatetime" align="center" min-width="200px"></el-table-column>
       <el-table-column label="操作" align="center" width="150">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" plain @click="handleShow(row)"
-            >查看</el-button
-          >
+          <el-button type="primary" size="small" plain @click="handleShow(row)">查看</el-button>
           <el-button
             type="danger"
             size="small"
@@ -89,13 +62,7 @@
             v-if="row.status !== 2 && row.status !== 3"
             >取消</el-button
           >
-          <el-button
-            v-if="row.status == 2"
-            size="small"
-            plain
-            @click="handlePrint(row)"
-            >打印</el-button
-          >
+          <el-button v-if="row.status == 2" size="small" plain @click="handlePrint(row)">打印</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -113,12 +80,7 @@
       </el-pagination>
     </div>
 
-    <el-drawer
-      title="报销申请单"
-      :visible.sync="drawer.visible"
-      direction="rtl"
-      size="500px"
-    >
+    <el-drawer title="报销申请单" :visible.sync="drawer.visible" direction="rtl" size="500px">
       <BaoXiaoDetail
         class="bao-xiao-detail"
         :data="drawer.data.flow_params"
@@ -133,9 +95,7 @@
         <h2 align="center">报销</h2>
         <div class="pdf-header">
           <span class="company">厦门风领科技有限公司</span>
-          <span class="apply-date"
-            >申请日期：{{ print.data.flow_params.a_date }}</span
-          >
+          <span class="apply-date">申请日期：{{ print.data.flow_params.a_date }}</span>
         </div>
         <table border="1">
           <tbody>
@@ -163,10 +123,7 @@
               <td>单位</td>
               <td>价格</td>
             </tr>
-            <tr
-              v-for="(item, index) in print.data.flow_params.detailList"
-              :key="index"
-            >
+            <tr v-for="(item, index) in print.data.flow_params.detailList" :key="index">
               <td class="label">报销明细{{ index + 1 }}</td>
               <td>{{ item.name }}</td>
               <td>{{ item.number }}</td>
@@ -179,11 +136,7 @@
               <td colspan="4">{{ print.data.flow_params.pay_type }}</td>
             </tr>
             <tr v-for="(item, index) in print.actList" :key="index">
-              <td
-                v-if="index == 0"
-                class="label"
-                :rowspan="print.actList.length + 1"
-              >
+              <td v-if="index == 0" class="label" :rowspan="print.actList.length + 1">
                 审批流程
               </td>
               <td colspan="4">{{ item.act_user }} 已同意</td>
@@ -197,9 +150,7 @@
         </div>
       </div>
       <div slot="footer" style="margin-top: 50px">
-        <el-button type="primary" size="small" @click="printOrder"
-          >打印报销单</el-button
-        >
+        <el-button type="primary" size="small" @click="printOrder">打印报销单</el-button>
       </div>
     </el-dialog>
   </div>
@@ -259,7 +210,7 @@ export default {
         cancelButtonText: '关闭'
       }).then(() => {
         this.$axios({
-          url: '/api/bao-xiao/cancel',
+          url: '/api/reimbur/cancel',
           method: 'POST',
           data: {
             id: row.id
@@ -276,7 +227,7 @@ export default {
     },
     async query() {
       const res = await this.$axios({
-        url: '/api/bao-xiao/query-my-baoxiao',
+        url: '/api/reimbur/query-my-baoxiao',
         method: 'POST',
         data: this.filters
       });
@@ -298,7 +249,7 @@ export default {
         });
       });
       const res = await this.$axios({
-        url: '/api/bao-xiao/query-instance-process-status',
+        url: '/api/reimbur/query-instance-process-status',
         method: 'GET',
         params: {
           id: row.id

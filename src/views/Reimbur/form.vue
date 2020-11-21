@@ -7,24 +7,14 @@
         <el-col :span="8">
           <el-form-item label="填单人：" prop="a_user_id">
             <el-select v-model="form.a_user_id" :disabled="edit">
-              <el-option
-                v-for="item in userList"
-                :key="item.id"
-                :label="item.user_name"
-                :value="item.id"
-              ></el-option>
+              <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="部门：" prop="a_dept_id">
             <el-select v-model="form.a_dept_id" placeholder="填单人所在部门">
-              <el-option
-                v-for="item in deptList"
-                :key="item.id"
-                :label="item.dept_name"
-                :value="item.id"
-              ></el-option>
+              <el-option v-for="item in deptList" :key="item.id" :label="item.dept_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -44,24 +34,14 @@
         <el-col :span="8">
           <el-form-item label="申请人：" prop="b_user_id">
             <el-select v-model="form.b_user_id" :disabled="edit">
-              <el-option
-                v-for="item in userList"
-                :key="item.id"
-                :label="item.user_name"
-                :value="item.id"
-              ></el-option>
+              <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="部门：" prop="b_dept_id">
             <el-select v-model="form.b_dept_id" placeholder="申请人所在部门">
-              <el-option
-                v-for="item in deptList"
-                :key="item.id"
-                :label="item.dept_name"
-                :value="item.id"
-              ></el-option>
+              <el-option v-for="item in deptList" :key="item.id" :label="item.dept_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -81,24 +61,14 @@
         <el-col :span="8">
           <el-form-item label="申请类型：">
             <el-select v-model="form.apply_type">
-              <el-option
-                v-for="item in applyTypeList"
-                :key="item"
-                :label="item"
-                :value="item"
-              ></el-option>
+              <el-option v-for="item in applyTypeList" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="付款方式：">
             <el-select v-model="form.pay_type">
-              <el-option
-                v-for="item in payTypeList"
-                :key="item"
-                :label="item"
-                :value="item"
-              ></el-option>
+              <el-option v-for="item in payTypeList" :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -127,10 +97,7 @@
 
       <el-row>
         <el-form-item label="银行卡号：" prop="bank_account">
-          <el-input
-            v-model.trim="form.bank_account"
-            style="max-width: 500px"
-          ></el-input>
+          <el-input v-model.trim="form.bank_account" style="max-width: 500px"></el-input>
         </el-form-item>
       </el-row>
 
@@ -162,12 +129,7 @@
             <h4>报销明细({{ index + 1 }})</h4>
           </el-col>
           <el-col :span="12" align="right">
-            <el-button
-              v-if="form.detailList.length > 1"
-              type="text"
-              @click="delDetail(index)"
-              >删除</el-button
-            >
+            <el-button v-if="form.detailList.length > 1" type="text" @click="delDetail(index)">删除</el-button>
           </el-col>
         </el-row>
         <el-form-item label="单价(元)：">
@@ -196,13 +158,7 @@
             default-first-option
             placeholder="请选择单位或者自己输入单位"
           >
-            <el-option
-              v-for="item in unitList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
+            <el-option v-for="item in unitList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属科目：">
@@ -221,27 +177,15 @@
           ></el-cascader>
         </el-form-item>
         <el-form-item label="物品名称：">
-          <el-input
-            v-model.trim="item.name"
-            style="max-width: 500px"
-            placeholder="例如：纸巾，台式电脑等"
-          ></el-input>
+          <el-input v-model.trim="item.name" style="max-width: 500px" placeholder="例如：纸巾，台式电脑等"></el-input>
         </el-form-item>
         <el-form-item label="备注：">
-          <el-input
-            v-model.trim="item.remark"
-            style="max-width: 500px"
-          ></el-input>
+          <el-input v-model.trim="item.remark" style="max-width: 500px"></el-input>
         </el-form-item>
       </div>
 
       <div>
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          plain
-          style="margin-left: 100px"
-          @click="addDetail"
+        <el-button type="primary" icon="el-icon-plus" plain style="margin-left: 100px" @click="addDetail"
           >添加报销明细</el-button
         >
       </div>
@@ -254,24 +198,13 @@
         </el-form-item>
         <el-form-item label="审批人：">
           <el-select v-model="form.approve_user">
-            <el-option
-              v-for="item in userList"
-              :key="item.id"
-              :label="item.user_name"
-              :value="item.id"
-            ></el-option>
+            <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
       </div>
 
       <div class="footer">
-        <el-button
-          type="primary"
-          round
-          style="width: 200px"
-          @click="handleSubmit"
-          >提 交</el-button
-        >
+        <el-button type="primary" round style="width: 200px" @click="handleSubmit">提 交</el-button>
       </div>
     </el-form>
     <div style="height: 200px"></div>
@@ -282,7 +215,6 @@
 import dayjs from 'dayjs';
 import NP from 'number-precision';
 import { getAllUser, getAllDept } from '@/api/index';
-import api from '@/utils/api';
 
 export default {
   name: 'BaoXiaoForm',
@@ -353,22 +285,16 @@ export default {
         ]
       },
       rules: {
-        a_user_id: [
-          { required: true, message: '请选择填单人', trigger: 'blur' }
-        ],
+        a_user_id: [{ required: true, message: '请选择填单人', trigger: 'blur' }],
         a_dept_id: [{ required: true, message: '请选择部门', trigger: 'blur' }],
         a_date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
 
-        b_user_id: [
-          { required: true, message: '请选择申请人', trigger: 'blur' }
-        ],
+        b_user_id: [{ required: true, message: '请选择申请人', trigger: 'blur' }],
         b_dept_id: [{ required: true, message: '请选择部门', trigger: 'blur' }],
         b_date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
 
         payee: [{ required: true, message: '请输入收款单位', trigger: 'blur' }],
-        bank_account: [
-          { required: true, message: '请输入银行卡号', trigger: 'blur' }
-        ]
+        bank_account: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }]
       }
     };
   },
@@ -386,7 +312,7 @@ export default {
   methods: {
     querySubject() {
       this.$axios({
-        url: api.bankBillSubjectTree,
+        url: '获取科目',
         methods: 'get'
       }).then(res => {
         function treeMap(item) {
@@ -399,9 +325,7 @@ export default {
           };
           return temp;
         }
-        this.subjectData = res.data
-          .filter(item => item.id.startsWith('20'))
-          .map(treeMap);
+        this.subjectData = res.data.filter(item => item.id.startsWith('20')).map(treeMap);
       });
     },
     subjectFilterMethod(node, keyword) {
@@ -459,10 +383,7 @@ export default {
       this.$refs.applyForm.validate(valid => {
         if (valid) {
           // 校验成功
-          if (
-            this.apply_type === '正常请款' &&
-            this.receipt_number.length === ''
-          ) {
+          if (this.apply_type === '正常请款' && this.receipt_number.length === '') {
             return this.$message.warning('正常请款时，需要填写发票号！');
           }
           if (!this.form.approve_user) {
@@ -473,14 +394,10 @@ export default {
               return false;
             }
           }
-          let user = this.userList.find(
-            item => item.id === this.form.a_user_id
-          );
+          let user = this.userList.find(item => item.id === this.form.a_user_id);
           // 填单人名字
           this.form.a_user_name = user.user_name;
-          let dept = this.deptList.find(
-            item => item.id === this.form.a_dept_id
-          );
+          let dept = this.deptList.find(item => item.id === this.form.a_dept_id);
           // 填单人部门
           this.form.a_dept_name = dept.dept_name;
 

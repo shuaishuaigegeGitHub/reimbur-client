@@ -6,15 +6,36 @@ Vue.use(Router);
 
 let constantRoutesTemp = [
   {
-    path: '/dynamic',
-    show: false,
+    path: '/reimbur',
+    show: true,
     type: 1,
     component: Layout,
     meta: {
-      title: '',
+      title: '报销管理',
       icon: ''
     },
+    redirect: '/reimbur/index',
     children: [
+      {
+        path: '/reimbur/index',
+        type: 2,
+        show: true,
+        meta: {
+          title: '我的报销',
+          icon: ''
+        },
+        component: () => import('@/views/Reimbur/Index')
+      },
+      {
+        path: '/reimbur/add',
+        type: 2,
+        show: true,
+        meta: {
+          title: '报销申请',
+          icon: ''
+        },
+        component: () => import('@/views/Reimbur/add')
+      },
       {
         path: '/reimbur/edit/:id',
         type: 2,
@@ -27,39 +48,9 @@ let constantRoutesTemp = [
       }
     ]
   },
-
   {
-    path: '/dynamic',
-    show: false,
-    type: 1,
-    component: Layout,
-    meta: {
-      title: '',
-      icon: ''
-    },
-    redirect: '',
-    children: [
-      {
-        path: '/reimbur/index',
-        type: 2,
-        show: false,
-        meta: {
-          title: '我的报销',
-          icon: ''
-        },
-        component: () => import('@/views/Reimbur/Index')
-      },
-      {
-        path: '/reimbur/add',
-        type: 2,
-        show: false,
-        meta: {
-          title: '报销申请',
-          icon: ''
-        },
-        component: () => import('@/views/Reimbur/add')
-      }
-    ]
+    path: '*',
+    redirect: '/reimbur/index'
   }
 ];
 

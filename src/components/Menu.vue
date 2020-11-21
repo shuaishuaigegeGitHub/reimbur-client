@@ -16,6 +16,7 @@
 <script>
 import bus from '../utils/bus';
 import MenuItem from './MenuItem';
+import { constantRoutes } from '../router/index';
 
 export default {
   components: {
@@ -24,7 +25,7 @@ export default {
   data() {
     return {
       collapse: false,
-      allRoutes: []
+      allRoutes: constantRoutes
     };
   },
   computed: {
@@ -32,25 +33,12 @@ export default {
       return this.$route.path.replace('/', '');
     }
   },
-  methods: {
-    async initStyle() {
-      let head = document.getElementsByTagName('head')[0];
-      let linkTag = document.createElement('link');
-      linkTag.id = 'dynamic-style';
-      linkTag.href = this.$store.state.permission.iconAddress;
-      linkTag.setAttribute('rel', 'stylesheet');
-      linkTag.setAttribute('type', 'text/css');
-      head.appendChild(linkTag);
-    }
-  },
   created() {
-    this.initStyle();
     // 通过 Event Bus 进行组件间通信，来折叠侧边栏
     bus.$on('collapse', msg => {
       this.collapse = msg;
       bus.$emit('collapse-content', msg);
     });
-    this.allRoutes = this.$store.state.permission.routes;
   }
 };
 </script>

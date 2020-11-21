@@ -1,10 +1,6 @@
 <template>
   <div class="main">
-    <bao-xiao-form
-      :model="data.flow_params"
-      class="bao-xiao-form"
-      @submit="handleSubmit"
-    ></bao-xiao-form>
+    <bao-xiao-form :model="data.flow_params" class="bao-xiao-form" @submit="handleSubmit"></bao-xiao-form>
     <div class="descriptor">
       <div class="descriptor-content">
         <b>说明：</b>
@@ -46,7 +42,7 @@ export default {
       if (id) {
         try {
           const res = await this.$axios({
-            url: '/api/bao-xiao/query-editable',
+            url: '/api/reimbur/query-editable',
             params: {
               id
             }
@@ -64,13 +60,13 @@ export default {
         flow_params: form
       };
       await this.$axios({
-        url: '/api/bao-xiao/edit',
+        url: '/api/reimbur/edit',
         method: 'POST',
         data: data
       });
 
       this.$message.success('修改成功');
-      this.$router.push({ path: '/baoxiao/index' });
+      this.$router.push({ path: '/reimbur/index' });
     }
   },
   mounted() {

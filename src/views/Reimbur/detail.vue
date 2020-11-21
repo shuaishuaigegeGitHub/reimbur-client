@@ -32,9 +32,7 @@
             {{ item.name }}
           </el-form-item>
           <el-form-item label="价格：">
-            <span class="money-color">{{
-              calTotalMoney(item.money, item.number)
-            }}</span>
+            <span class="money-color">{{ calTotalMoney(item.money, item.number) }}</span>
             元
           </el-form-item>
           <el-form-item label="备注：">
@@ -46,19 +44,11 @@
       <div class="workflow">
         <h3 class="workflow-title">审核流程</h3>
         <el-timeline>
-          <el-timeline-item
-            v-for="(act, index) in actList"
-            :key="index"
-            :timestamp="act.time"
-            :color="act.color"
-          >
+          <el-timeline-item v-for="(act, index) in actList" :key="index" :timestamp="act.time" :color="act.color">
             <h3>{{ act.msg }}</h3>
             <div class="desc">
               {{ act.act_user }}
-              <span
-                v-if="act.status"
-                :style="{ color: act.status === 2 ? '#359e35' : '' }"
-              >
+              <span v-if="act.status" :style="{ color: act.status === 2 ? '#359e35' : '' }">
                 （{{ getStatus(act) }}）
               </span>
             </div>
@@ -68,13 +58,7 @@
       </div>
 
       <div v-if="reEdit" align="center">
-        <el-button
-          type="primary"
-          round
-          style="width: 200px; margin-top: 20px"
-          @click="handleEdit"
-          >重新编辑</el-button
-        >
+        <el-button type="primary" round style="width: 200px; margin-top: 20px" @click="handleEdit">重新编辑</el-button>
       </div>
     </el-form>
   </div>
@@ -129,7 +113,7 @@ export default {
       if (this.instanceId) {
         this.actList = [];
         const res = await this.$axios({
-          url: '/api/bao-xiao/query-instance-process-status',
+          url: '/api/reimbur/query-instance-process-status',
           method: 'GET',
           params: {
             id: this.instanceId

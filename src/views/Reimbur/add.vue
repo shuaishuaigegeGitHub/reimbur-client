@@ -30,7 +30,7 @@ export default {
     // 提交事件
     async handleSubmit(form) {
       this.$axios({
-        url: '/api/bao-xiao/add',
+        url: '/api/reimbur/add',
         method: 'POST',
         data: form
       }).then(res => {
@@ -43,7 +43,7 @@ export default {
             // 继续报销。
           })
           .catch(err => {
-            this.$router.push({ path: '/baoxiao/index' });
+            this.$router.push({ path: '/reimbur/index' });
           });
       });
     }

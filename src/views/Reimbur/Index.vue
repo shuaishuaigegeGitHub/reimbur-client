@@ -32,7 +32,7 @@ export default {
   methods: {
     async queryCount() {
       const res = await this.$axios({
-        url: '/api/bao-xiao/query-my-shenpi-count',
+        url: '/api/reimbur/query-my-shenpi-count',
         method: 'GET'
       });
       this.count = res.data;
