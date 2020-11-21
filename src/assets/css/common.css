@@ -1,0 +1,102 @@
+/*列表页公共样式*/
+
+/* .fl-container {
+  width: 100%;
+  padding: 10px 30px 30px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.fl-container .el-tabs {
+  margin-top: 20px;
+}
+
+.fl-container .el-tabs__content {
+  padding-left: 20px;
+}
+
+.fl-container .search-box {
+  margin: 20px 0;
+}
+
+.fl-container .search-select {
+  margin-right: 15px;
+}
+
+.fl-container .input-with-select {
+  width: 20%;
+  margin-right: 15px;
+}
+
+.fl-container .add-box {
+  margin-bottom: 20px;
+} */
+
+/*新增页表单公共样式*/
+/* 
+.fl-form {
+  width: 100%;
+  padding: 10px 30px 30px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.fl-form .fl-form-table {
+  width: 100%;
+  table-layout: fixed;
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  font-size: 0;
+  border-spacing: 1px;
+}
+
+.fl-form .fl-form-table tr {
+  height: 40px;
+  box-shadow: 0px 1px 0px 0px rgba(232, 232, 232, 1);
+}
+
+.fl-form .fl-form-table td {
+  padding: 0 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+.fl-form .fl-form-table td.label-td {
+  width: 145px;
+  text-align: right;
+  background: rgba(246, 246, 246, 1);
+  box-shadow: 0px 1px 0px 0px rgba(232, 232, 232, 1);
+}
+
+.fl-form .fl-form-table td:hover {
+  color: #488cee;
+}
+
+.card-icon {
+  margin-left: 10px;
+  color: black;
+  cursor: pointer;
+}
+
+.fin-upload .el-upload--text {
+  height: auto;
+  width: auto;
+  border: none;
+  overflow: visible;
+}
+
+.el-table .income-row {
+  background: #e0efd7;
+}
+
+.el-table .cost-row {
+  background: #f5c0c0;
+}
+
+.el-table .deduct-row {
+  background: #b6eeff;
+}
+
+i.driver-highlighted-element {
+  color: #181824;
+} */

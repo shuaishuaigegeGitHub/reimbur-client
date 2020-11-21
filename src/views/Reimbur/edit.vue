@@ -1,0 +1,106 @@
+<template>
+  <div class="main">
+    <bao-xiao-form
+      :model="data.flow_params"
+      class="bao-xiao-form"
+      @submit="handleSubmit"
+    ></bao-xiao-form>
+    <div class="descriptor">
+      <div class="descriptor-content">
+        <b>说明：</b>
+        <ul>
+          <li>1、已有发票，付款类型为正常请款，否则，付款类型为预付请款。</li>
+          <li>2、正确填写发票号，发票号必须为纯数字。</li>
+          <li>
+            3、多个发票号请用中文逗号隔开，如果不知道什么是中文逗号，这里直接复制，格式如下：12345678，12345678。
+          </li>
+          <li>4、如果不知道科目怎么选择，请直接询问财务。</li>
+          <li>5、银行卡号，开户银行请正确填写，一经转账，无法修改。</li>
+          <li>6、银行卡号非招商银行的，必须填写开户银行，开户地址。</li>
+          <li>7、审批人选择自己的上级进行审批。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import BaoXiaoForm from './form';
+
+export default {
+  name: 'BaoXiaoAdd',
+  components: { BaoXiaoForm },
+  data() {
+    return {
+      data: {}
+    };
+  },
+  watch: {
+    $route(val) {
+      this.query();
+    }
+  },
+  methods: {
+    async query() {
+      let id = this.$route.params.id;
+      if (id) {
+        try {
+          const res = await this.$axios({
+            url: '/api/bao-xiao/query-editable',
+            params: {
+              id
+            }
+          });
+          this.data = res.data;
+        } catch (err) {
+          this.$router.go(-1);
+        }
+      }
+    },
+    // 提交事件
+    async handleSubmit(form) {
+      let data = {
+        id: this.data.id,
+        flow_params: form
+      };
+      await this.$axios({
+        url: '/api/bao-xiao/edit',
+        method: 'POST',
+        data: data
+      });
+
+      this.$message.success('修改成功');
+      this.$router.push({ path: '/baoxiao/index' });
+    }
+  },
+  mounted() {
+    this.query();
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.main {
+  padding: 20px;
+  display: flex;
+
+  .bao-xiao-form {
+    width: 1200px;
+  }
+
+  .descriptor {
+    flex-grow: 1;
+    margin-left: 50px;
+
+    .descriptor-content {
+      padding: 20px;
+      background-color: #d8f9c6;
+      font-weight: 400;
+
+      li {
+        line-height: 30px;
+      }
+    }
+  }
+}
+</style>
