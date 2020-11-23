@@ -128,7 +128,7 @@ export default {
     getStatus(act) {
       if (act.transfer) {
         if (act.status === 1) {
-          return '已转账';
+          return '转账中';
         } else if (act.status === 2) {
           return '已到账';
         }
