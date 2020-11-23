@@ -25,15 +25,15 @@ service.interceptors.response.use(
   response => {
     const res = response.data;
     if (response.status === 200) {
-      if (res.errcode) {
-        if (res.errcode === 401) {
+      if (res.code != 1000) {
+        if (res.code === 401) {
           // 401表示登录失效，直接清除token
           Message({
             message: res.msg,
             type: 'error'
           });
           removeToken();
-          // window.location.href = config.loginUrl;
+          window.location.href = config.loginUrl;
         } else {
           Message({
             message: res.msg,
@@ -42,7 +42,6 @@ service.interceptors.response.use(
           return Promise.reject(res);
         }
       } else {
-        // errcode = 0 表示没问题
         return res;
       }
     } else {
