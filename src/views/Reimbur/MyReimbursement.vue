@@ -271,6 +271,9 @@ export default {
   },
   mounted() {
     this.query();
+  },
+  activated() {
+    this.query();
   }
 };
 </script>

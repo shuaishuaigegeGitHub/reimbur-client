@@ -315,7 +315,6 @@ export default {
         url: '/api/reimbur/subject-tree',
         methods: 'get'
       }).then(res => {
-        console.log(res);
         function treeMap(item) {
           let temp = {
             id: item.id,
@@ -427,7 +426,6 @@ export default {
   async mounted() {
     this.userList = await getAllUser();
     this.deptList = await getAllDept();
-    console.log('到种类了');
     this.querySubject();
   }
 };

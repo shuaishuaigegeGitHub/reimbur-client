@@ -149,7 +149,7 @@ export default {
     },
     handleEdit() {
       this.$emit('close');
-      this.$router.push({ path: '/baoxiao/edit/' + this.instanceId });
+      this.$router.push({ path: '/reimbur/edit/' + this.instanceId });
     }
   },
   mounted() {
