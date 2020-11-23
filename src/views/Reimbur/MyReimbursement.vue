@@ -28,7 +28,7 @@
         </el-form>
       </el-col>
       <el-col :span="4" align="right">
-        <el-button size="small" type="primary" @click="handleApply">付款申请</el-button>
+        <el-button size="small" type="primary" @click="handleApply">报销申请</el-button>
       </el-col>
     </el-row>
     <el-table :data="list" border>
@@ -123,7 +123,7 @@
               <td>单位</td>
               <td>价格</td>
             </tr>
-            <tr v-for="(item, index) in print.data.flow_params.detailList" :key="index">
+            <tr v-for="(item, index) in print.data.flow_params.detailList" :key="index + item.name">
               <td class="label">报销明细{{ index + 1 }}</td>
               <td>{{ item.name }}</td>
               <td>{{ item.number }}</td>
@@ -200,7 +200,7 @@ export default {
   },
   methods: {
     handleApply() {
-      this.$router.push({ path: '/baoxiao/add' });
+      this.$router.push({ path: '/reimbur/add' });
     },
     handleCancel(row) {
       // 取消报销
@@ -241,10 +241,11 @@ export default {
     async handlePrint(row) {
       this.print.visible = true;
       this.print.data = row;
+      let name = row.flow_params.b_user_name;
       this.$nextTick(() => {
         watermarkIt({
           el: '.baoxiao-pdf-preview',
-          text: '李锦新',
+          text: name,
           color: 'rgba(0, 0, 0, .2)'
         });
       });

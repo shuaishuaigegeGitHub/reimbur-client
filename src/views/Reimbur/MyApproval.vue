@@ -28,7 +28,7 @@
         </el-form>
       </el-col>
       <el-col :span="4" align="right">
-        <el-button size="small" type="primary" @click="handleApply">付款申请</el-button>
+        <el-button size="small" type="primary" @click="handleApply">报销申请</el-button>
       </el-col>
     </el-row>
     <el-table :data="list" border>

@@ -6,7 +6,7 @@
       <el-row :gutter="10">
         <el-col :span="8">
           <el-form-item label="填单人：" prop="a_user_id">
-            <el-select v-model="form.a_user_id" :disabled="edit">
+            <el-select v-model="form.a_user_id" :disabled="edit" filterable>
               <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -33,7 +33,7 @@
       <el-row :gutter="10">
         <el-col :span="8">
           <el-form-item label="申请人：" prop="b_user_id">
-            <el-select v-model="form.b_user_id" :disabled="edit">
+            <el-select v-model="form.b_user_id" :disabled="edit" filterable>
               <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -312,9 +312,10 @@ export default {
   methods: {
     querySubject() {
       this.$axios({
-        url: '获取科目',
+        url: '/api/reimbur/subject-tree',
         methods: 'get'
       }).then(res => {
+        console.log(res);
         function treeMap(item) {
           let temp = {
             id: item.id,
@@ -426,6 +427,7 @@ export default {
   async mounted() {
     this.userList = await getAllUser();
     this.deptList = await getAllDept();
+    console.log('到种类了');
     this.querySubject();
   }
 };
