@@ -5887,6 +5887,11 @@ nth-check@^1.0.2, nth-check@~1.0.1:
   dependencies:
     boolbase "~1.0.0"
 
+num2capital@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.npm.taobao.org/num2capital/download/num2capital-1.0.5.tgz#2433a0f5d05920abc9ec6166a6a69e52b053c825"
+  integrity sha1-JDOg9dBZIKvJ7GFmpqaeUrBTyCU=
+
 num2fraction@^1.2.2:
   version "1.2.2"
   resolved "https://registry.npm.taobao.org/num2fraction/download/num2fraction-1.2.2.tgz#6f682b6a027a4e9ddfa4564cd2589d1d4e669ede"

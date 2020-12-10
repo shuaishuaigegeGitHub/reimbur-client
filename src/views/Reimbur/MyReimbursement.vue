@@ -51,7 +51,7 @@
       <el-table-column label="申请时间" prop="createtime" align="center" min-width="200px"></el-table-column>
       <el-table-column label="最近一次操作人" prop="update_by" align="center" min-width="150px"></el-table-column>
       <el-table-column label="最近一次操作时间" prop="updatetime" align="center" min-width="200px"></el-table-column>
-      <el-table-column label="操作" align="center" width="150">
+      <el-table-column label="操作" align="center" width="300">
         <template slot-scope="{ row }">
           <el-button type="primary" size="small" plain @click="handleShow(row)">查看</el-button>
           <el-button
@@ -62,7 +62,7 @@
             v-if="row.status !== 2 && row.status !== 3"
             >取消</el-button
           >
-          <el-button v-if="row.status == 2" size="small" plain @click="handlePrint(row)">打印</el-button>
+          <el-button size="small" plain @click="handlePrint(row)">打印</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -90,68 +90,16 @@
       ></BaoXiaoDetail>
     </el-drawer>
 
-    <el-dialog :visible.sync="print.visible" title="报销单" width="840px">
-      <div class="baoxiao-pdf-preview">
-        <h2 align="center">报销</h2>
-        <div class="pdf-header">
-          <span class="company">厦门风领科技有限公司</span>
-          <span class="apply-date">申请日期：{{ print.data.flow_params.a_date }}</span>
-        </div>
-        <table border="1">
-          <tbody>
-            <tr>
-              <td class="label">审批编码</td>
-              <td colspan="4">{{ print.data.id }}</td>
-            </tr>
-            <tr>
-              <td class="label">申请人</td>
-              <td colspan="4">{{ print.data.flow_params.b_user_name }}</td>
-            </tr>
-            <tr>
-              <td class="label">申请人部门</td>
-              <td colspan="4">{{ print.data.flow_params.b_dept_name }}</td>
-            </tr>
-            <tr>
-              <td class="label">申请事由</td>
-              <td colspan="4">公司内网搭建、网络部署</td>
-            </tr>
-
-            <tr>
-              <td class="label"></td>
-              <td>名称</td>
-              <td>数量</td>
-              <td>单位</td>
-              <td>价格</td>
-            </tr>
-            <tr v-for="(item, index) in print.data.flow_params.detailList" :key="index + item.name">
-              <td class="label">报销明细{{ index + 1 }}</td>
-              <td>{{ item.name }}</td>
-              <td>{{ item.number }}</td>
-              <td>{{ item.unit }}</td>
-              <td>{{ calMoney(item) | 1000 }}</td>
-            </tr>
-
-            <tr>
-              <td class="label">支付方式</td>
-              <td colspan="4">{{ print.data.flow_params.pay_type }}</td>
-            </tr>
-            <tr v-for="(item, index) in print.actList" :key="index">
-              <td v-if="index == 0" class="label" :rowspan="print.actList.length + 1">
-                审批流程
-              </td>
-              <td colspan="4">{{ item.act_user }} 已同意</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="stamp">
-          <div class="stamp-inside">
-            <span>审批通过</span>
-          </div>
-        </div>
+    <el-dialog :visible.sync="print.visible" title="报销单" width="800px">
+      <div align="center">
+        <el-radio-group v-model="print.type">
+          <el-radio-button label="1">费用报销单</el-radio-button>
+          <!-- <el-radio-button label="2">差旅费用报销单</el-radio-button> -->
+          <el-radio-button label="3">报销单</el-radio-button>
+        </el-radio-group>
       </div>
-      <div slot="footer" style="margin-top: 50px">
-        <el-button type="primary" size="small" @click="printOrder">打印报销单</el-button>
-      </div>
+      <ReimburForm1 v-if="print.type == 1" :form="print.data" :actList="print.actList"></ReimburForm1>
+      <ReimburForm2 v-if="print.type == 3" :form="print.data" :actList="print.actList"></ReimburForm2>
     </el-dialog>
   </div>
 </template>
@@ -159,12 +107,15 @@
 <script>
 import BaoXiaoDetail from './detail';
 import pdfjs from '@/utils/pdf';
-import { watermarkIt } from 'easy-watermark';
 import NP from 'number-precision';
+import ReimburForm1 from './ReimburForm1';
+import ReimburForm2 from './ReimburForm2';
 
 export default {
   components: {
-    BaoXiaoDetail
+    BaoXiaoDetail,
+    ReimburForm1,
+    ReimburForm2
   },
   data() {
     return {
@@ -190,6 +141,7 @@ export default {
       },
       print: {
         visible: false,
+        type: '3',
         data: {
           flow_params: {}
         },
@@ -241,14 +193,6 @@ export default {
     async handlePrint(row) {
       this.print.visible = true;
       this.print.data = row;
-      let name = row.flow_params.b_user_name;
-      this.$nextTick(() => {
-        watermarkIt({
-          el: '.baoxiao-pdf-preview',
-          text: name,
-          color: 'rgba(0, 0, 0, .2)'
-        });
-      });
       const res = await this.$axios({
         url: '/api/reimbur/query-instance-process-status',
         method: 'GET',
@@ -261,16 +205,7 @@ export default {
       // 去掉最后一个
       res.data.pop();
       this.print.actList = res.data;
-    },
-    printOrder() {
-      pdfjs({ selector: '.baoxiao-pdf-preview', filename: '报销单.pdf' });
-    },
-    calMoney(data) {
-      return NP.round(NP.times(data.money, data.number), 2);
     }
-  },
-  mounted() {
-    this.query();
   },
   activated() {
     this.query();
@@ -287,69 +222,5 @@ export default {
 
 .footer-page {
   padding: 10px 15px;
-}
-
-.baoxiao-pdf-preview {
-  position: relative;
-  padding: 50px 100px 0;
-  width: 600px;
-  margin: 0 auto;
-
-  .pdf-header {
-    margin: 10px 0;
-    font-weight: normal;
-
-    .apply-date {
-      margin-left: 40px;
-    }
-  }
-
-  table {
-    font-weight: normal;
-    border-collapse: collapse;
-    border-spacing: 0;
-    width: 100%;
-
-    tbody {
-      tr {
-        td {
-          padding: 10px;
-        }
-
-        .label {
-          width: 150px;
-        }
-      }
-    }
-  }
-
-  .stamp {
-    position: absolute;
-    top: 50px;
-    right: 100px;
-    font-weight: normal;
-    display: inline-block;
-    border-radius: 50%;
-    border: 1px solid #78f778;
-    font-size: 18px;
-    padding: 5px;
-
-    .stamp-inside {
-      width: 50px;
-      height: 50px;
-      padding: 10px;
-      border-radius: 50%;
-      border: 1px solid #78f778;
-      text-align: center;
-      color: #7ec13b;
-      transform: rotate(-30deg);
-      line-height: 1.3rem;
-
-      span {
-        display: inline-block;
-        margin-top: 5px;
-      }
-    }
-  }
 }
 </style>

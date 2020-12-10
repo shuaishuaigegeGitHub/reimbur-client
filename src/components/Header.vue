@@ -4,7 +4,7 @@
       <div class="collapse-btn" @click="handleSystemMenu">
         <i class="el-icon-menu fin-tour-step-4"></i>
       </div>
-      <div class="logo-name">App配置系统</div>
+      <div class="logo-name">报销系统</div>
     </div>
     <div class="header-menu">
       <div class="menu-control" @click="collapseChage">
@@ -50,7 +50,7 @@ export default {
       fullscreen: false,
       user: {
         uid: null,
-        userName: '连建伟',
+        userName: '未知用户',
         avatar: logoImg
       },
       systemMenuVisible: false
