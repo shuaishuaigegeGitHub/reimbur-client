@@ -231,6 +231,8 @@ export default {
   },
   data() {
     return {
+      // 最大报销金额
+      maxMoney: 99999999,
       edit: false,
       // 用户列表
       userList: [],
@@ -414,6 +416,11 @@ export default {
 
           // 报销总金额
           this.form.total_money = this.totalMoney;
+
+          if (this.form.total_money > this.maxMoney) {
+            // 报销总金额不能大于 999999.99
+            return this.$message.warning(`报销金额不能大于 ￥${this.maxMoney}`);
+          }
 
           // 抛出事件到上级
           this.$emit('submit', this.form);
