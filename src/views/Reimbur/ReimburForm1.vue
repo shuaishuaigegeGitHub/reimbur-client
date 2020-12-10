@@ -177,13 +177,11 @@ export default {
           return temp;
         }
         this.subjectData = res.data.map(treeMap);
-        console.log(this.subjectData);
       });
     }
   },
   mounted() {
     this.querySubject();
-    console.log(this.form);
   }
 };
 </script>
