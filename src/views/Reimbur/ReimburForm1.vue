@@ -8,7 +8,7 @@
         </div>
         <div class="form-no">
           <span class="label">编号</span>
-          <span class="value text--black">{{ form.no }}</span>
+          <span class="value text--black"></span>
         </div>
       </div>
 

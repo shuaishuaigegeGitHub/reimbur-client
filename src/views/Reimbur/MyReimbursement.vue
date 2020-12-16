@@ -98,8 +98,8 @@
           <el-radio-button label="3">报销单</el-radio-button>
         </el-radio-group>
       </div>
-      <ReimburForm1 v-if="print.type == 1" :form="print.data" :actList="print.actList"></ReimburForm1>
-      <ReimburForm2 v-if="print.type == 3" :form="print.data" :actList="print.actList"></ReimburForm2>
+      <ReimburForm1 v-show="print.type == 1" :form="print.data" :actList="print.actList"></ReimburForm1>
+      <ReimburForm2 v-show="print.type == 3" :form="print.data" :actList="print.actList"></ReimburForm2>
     </el-dialog>
   </div>
 </template>
