@@ -53,7 +53,7 @@
       </div>
     </div>
     <div align="center" style="margin-top: 50px">
-      <el-button type="primary" size="small" @click="printOrder">打印报销单</el-button>
+      <el-button type="primary" size="small" @click="printOrder">下载PDF</el-button>
     </div>
   </div>
 </template>
