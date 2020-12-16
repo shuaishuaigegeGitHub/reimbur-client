@@ -48,11 +48,11 @@
             </tr>
           </thead>
           <tbody align="center" class="text--black">
-            <tr v-for="(item, index) in form.flow_params.detailList" :key="index" class="content-item">
+            <tr v-for="(item, index) in detailList" :key="index" class="content-item">
               <td class="first">{{ item.name }}</td>
-              <td v-for="(moneyBit, i) in moneySplit(calMoney(item))" :key="i + '-' + index">{{ moneyBit }}</td>
-              <td>{{ findSubjectName(item.subject_id) }}</td>
-              <td>1</td>
+              <td v-for="(moneyBit, i) in item.money" :key="i + '-' + index">{{ moneyBit }}</td>
+              <td>{{ item.subjectName }}</td>
+              <td></td>
             </tr>
 
             <tr class="content-item">
@@ -121,6 +121,26 @@ export default {
         .reduce((prev, cur) => {
           return NP.round(NP.plus(prev, cur), 2);
         }, 0);
+    },
+    detailList: function() {
+      const list = [];
+      this.form.flow_params.detailList.forEach(item => {
+        list.push({
+          name: item.name,
+          money: this.moneySplit(this.calMoney(item)),
+          subjectName: this.findSubjectName(item.subject_id)
+        });
+      });
+      // 最少6个
+      const MIN = 6;
+      while (list.length < 6) {
+        list.push({
+          name: '',
+          money: Array(8).fill(''),
+          subjectName: ''
+        });
+      }
+      return list;
     }
   },
   methods: {
@@ -133,7 +153,7 @@ export default {
         .replace('.', '');
       let moneyArr = moneyStr.split('');
       while (moneyArr.length < 8) {
-        moneyArr.unshift('0');
+        moneyArr.unshift('');
       }
       return moneyArr;
     },
@@ -298,7 +318,7 @@ export default {
       }
 
       .content-item {
-        height: 42px;
+        height: 38px;
 
         .first {
           text-align: left;
