@@ -53,16 +53,11 @@
       <el-table-column label="最近一次操作时间" prop="updatetime" align="center" min-width="200px"></el-table-column>
       <el-table-column label="操作" align="center" width="300">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" plain @click="handleShow(row)">查看</el-button>
-          <el-button
-            type="danger"
-            size="small"
-            plain
-            @click="handleCancel(row)"
-            v-if="row.status !== 2 && row.status !== 3"
+          <el-button type="primary" size="small" @click="handleShow(row)">查看</el-button>
+          <el-button type="danger" size="small" @click="handleCancel(row)" v-if="row.status !== 2 && row.status !== 3"
             >取消</el-button
           >
-          <el-button size="small" plain @click="handlePrint(row)">打印</el-button>
+          <el-button size="small" @click="handlePrint(row)">打印</el-button>
         </template>
       </el-table-column>
     </el-table>

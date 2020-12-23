@@ -431,6 +431,10 @@ export default {
     }
   },
   async mounted() {
+    if (this.$store.state.user.user) {
+      this.form.a_user_id = this.$store.state.user.user.uid;
+      this.form.b_user_id = this.$store.state.user.user.uid;
+    }
     this.userList = await getAllUser();
     this.deptList = await getAllDept();
     this.querySubject();
