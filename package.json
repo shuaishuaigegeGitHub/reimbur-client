@@ -7,9 +7,10 @@
   "author": "ljw <lianjianwei@fenglinghudong.com>",
   "license": "MIT",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "serve": "vue-cli-service serve --mode dev",
+    "build": "vue-cli-service build --mode prod",
+    "lint": "vue-cli-service lint",
+    "deploy": "pm2 deploy pm2.json prod update"
   },
   "dependencies": {
     "animejs": "^3.2.1",

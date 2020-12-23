@@ -1,0 +1,11 @@
+{
+  "deploy": {
+    "prod": {
+      "user": "zhuowenli",
+      "host": ["47.107.83.23"],
+      "ref": "origin/master",
+      "repo": "git@git.feigo.fun:lianjianwei/reimbur-client.git",
+      "path": "/home/zhuowenli/reimbur/reimbur-client"
+    }
+  }
+}
