@@ -35,6 +35,9 @@
             <span class="money-color">{{ calTotalMoney(item.money, item.number) }}</span>
             元
           </el-form-item>
+          <el-form-item label="科目：">
+            <span>{{ getCascaderLabel(item.subject_id) }}</span>
+          </el-form-item>
           <el-form-item label="备注：">
             {{ item.remark }}
           </el-form-item>
@@ -105,7 +108,9 @@ export default {
       form: {
         remark: ''
       },
-      actList: []
+      actList: [],
+      // 科目数据
+      subjectData: []
     };
   },
   methods: {
@@ -150,10 +155,46 @@ export default {
     handleEdit() {
       this.$emit('close');
       this.$router.push({ path: '/reimbur/edit/' + this.instanceId });
+    },
+    // 获取科目层级
+    getCascaderLabel(value) {
+      const labels = [];
+      const matchCascaderData = function(list) {
+        list.forEach(item => {
+          if (item.id == value) {
+            labels.push(item.name);
+          } else if (value.startsWith(item.id)) {
+            labels.push(item.name);
+            matchCascaderData(item.children);
+          }
+        });
+      };
+      matchCascaderData(this.subjectData);
+      labels.shift();
+      return labels.join(' / ');
+    },
+    // 查询科目数
+    async querySubjectData() {
+      const res = await this.$axios({
+        url: '/api/reimbur/subject-tree',
+        methods: 'get'
+      });
+      function treeMap(item) {
+        let temp = {
+          id: item.id,
+          name: item.name,
+          parent_id: item.parent_id,
+          parent_str: item.parent_str,
+          children: item.children.length ? item.children.map(treeMap) : null
+        };
+        return temp;
+      }
+      this.subjectData = res.data.map(treeMap);
     }
   },
   mounted() {
     this.query();
+    this.querySubjectData();
   }
 };
 </script>
