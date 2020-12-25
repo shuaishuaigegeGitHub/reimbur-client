@@ -75,17 +75,6 @@
       </el-row>
 
       <el-row>
-        <el-form-item label="发票号：" prop="receipt_number">
-          <el-input
-            v-model.trim="form.receipt_number"
-            type="textarea"
-            placeholder="多个发票号中间用中文逗号分隔，例如：111，333，456"
-            style="max-width: 500px"
-          ></el-input>
-        </el-form-item>
-      </el-row>
-
-      <el-row>
         <el-form-item label="收款单位：" prop="payee">
           <el-input
             v-model.trim="form.payee"
@@ -112,7 +101,7 @@
       </el-row>
 
       <el-row>
-        <el-form-item label="开户地址：">
+        <el-form-item label="开户地址：" prop="bank_address">
           <el-input
             v-model.trim="form.bank_address"
             style="max-width: 500px"
@@ -132,6 +121,13 @@
             <el-button v-if="form.detailList.length > 1" type="text" @click="delDetail(index)">删除</el-button>
           </el-col>
         </el-row>
+        <el-form-item label="发票号：">
+          <el-input
+            v-model.trim="item.receipt_number"
+            placeholder="多个发票号中间用中文逗号分隔，例如：111，333，456"
+            style="max-width: 500px"
+          ></el-input>
+        </el-form-item>
         <el-form-item label="单价(元)：">
           <el-input
             v-model="item.money"
@@ -271,7 +267,6 @@ export default {
         apply_type: '正常请款',
         pay_type: '银行转账',
         approve_user: null,
-        receipt_number: '',
         payee: '',
         bank_name: '招商银行',
         bank_account: '',
@@ -296,7 +291,8 @@ export default {
         b_date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
 
         payee: [{ required: true, message: '请输入收款单位', trigger: 'blur' }],
-        bank_account: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }]
+        bank_account: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }],
+        bank_address: [{ required: true, message: '请输入开户地址', trigger: 'blur' }]
       }
     };
   },
@@ -343,10 +339,25 @@ export default {
         money: 0,
         number: 1,
         unit: '',
+        receipt_number: '',
         subject_id: null,
         name: '',
         remark: ''
       });
+    },
+    // 清空报销明细
+    resetDetailList() {
+      this.form.detailList = [
+        {
+          money: 0,
+          number: 1,
+          unit: '',
+          receipt_number: '',
+          subject_id: null,
+          name: '',
+          remark: ''
+        }
+      ];
     },
     delDetail(index) {
       this.form.detailList.splice(index, 1);
@@ -384,10 +395,6 @@ export default {
     handleSubmit() {
       this.$refs.applyForm.validate(valid => {
         if (valid) {
-          // 校验成功
-          if (this.apply_type === '正常请款' && this.receipt_number.length === '') {
-            return this.$message.warning('正常请款时，需要填写发票号！');
-          }
           if (!this.form.approve_user) {
             return this.$message.warning('请选择您的上级作为审批人');
           }

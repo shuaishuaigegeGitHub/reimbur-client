@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <bao-xiao-form class="bao-xiao-form" @submit="handleSubmit"></bao-xiao-form>
+    <bao-xiao-form ref="baoXiaoForm" class="bao-xiao-form" @submit="handleSubmit"></bao-xiao-form>
     <div class="descriptor">
       <div class="descriptor-content">
         <b>说明：</b>
@@ -34,13 +34,15 @@ export default {
         method: 'POST',
         data: form
       }).then(res => {
+        this.$notify.success('报销申请提交成功');
         this.$confirm('报销提交成功，是否继续报销？', {
           type: 'warning',
           confirmButtonText: '继续',
-          cancelButtonText: '取消'
+          cancelButtonText: '查看我的报销'
         })
           .then(() => {
-            // 继续报销。
+            // 继续报销。清空报销明细
+            this.$refs.baoXiaoForm.resetDetailList();
           })
           .catch(err => {
             this.$router.push({ path: '/reimbur/index' });
