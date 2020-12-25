@@ -48,7 +48,21 @@ export default {
             this.$router.push({ path: '/reimbur/index' });
           });
       });
+    },
+    async queryInstance() {
+      if (this.$route.query.oid) {
+        const res = await this.$axios({
+          url: '/api/reimbur/instance/' + this.$route.query.oid
+        });
+        if (res.data) {
+          // 有数据
+          this.$refs.baoXiaoForm.setForm(res.data);
+        }
+      }
     }
+  },
+  activated() {
+    this.queryInstance();
   }
 };
 </script>

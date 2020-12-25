@@ -435,6 +435,9 @@ export default {
           return false;
         }
       });
+    },
+    setForm(form) {
+      this.form = form;
     }
   },
   async mounted() {

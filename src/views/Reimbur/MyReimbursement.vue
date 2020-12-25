@@ -76,13 +76,7 @@
     </div>
 
     <el-drawer title="报销申请单" :visible.sync="drawer.visible" direction="rtl" size="500px">
-      <BaoXiaoDetail
-        class="bao-xiao-detail"
-        :data="drawer.data.flow_params"
-        :instance-id="drawer.data.id"
-        myself
-        @close="handleCloseDetail"
-      ></BaoXiaoDetail>
+      <BaoXiaoDetail class="bao-xiao-detail" :data="drawer.data" myself @close="handleCloseDetail"></BaoXiaoDetail>
     </el-drawer>
 
     <el-dialog :visible.sync="print.visible" title="报销单" width="800px">

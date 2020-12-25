@@ -73,8 +73,7 @@
         <bao-xiao-detail
           class="bao-xiao-detail"
           :style="{ height: baoxiaoHeight }"
-          :data="drawer.data.flow_params"
-          :instance-id="drawer.data.instance_id"
+          :data="drawer.data"
         ></bao-xiao-detail>
         <el-row v-if="drawer.data.status === 1 && this.drawer.data.refext === ''" class="detail-footer" :gutter="30">
           <el-col :span="24">

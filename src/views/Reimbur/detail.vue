@@ -2,31 +2,31 @@
   <div class="main">
     <el-form label-width="100px">
       <el-form-item label="填单人：">
-        {{ data.a_user_name }}
-        （<i>{{ data.a_dept_name }}</i
+        {{ data.flow_params.a_user_name }}
+        （<i>{{ data.flow_params.a_dept_name }}</i
         >）
       </el-form-item>
       <el-form-item label="申请人：">
-        {{ data.b_user_name }}
-        （<i>{{ data.b_dept_name }}</i
+        {{ data.flow_params.b_user_name }}
+        （<i>{{ data.flow_params.b_dept_name }}</i
         >）
       </el-form-item>
       <el-form-item label="发票号：">
-        {{ data.receipt_number }}
+        {{ data.flow_params.receipt_number }}
       </el-form-item>
       <el-form-item label="申请类型：">
-        {{ data.apply_type }}
+        {{ data.flow_params.apply_type }}
       </el-form-item>
       <el-form-item label="付款方式：">
-        {{ data.pay_type }}
+        {{ data.flow_params.pay_type }}
       </el-form-item>
       <el-form-item label="总报销金额：">
-        <span class="money-color">{{ data.total_money | 1000 }}</span>
+        <span class="money-color">{{ data.flow_params.total_money | 1000 }}</span>
         元
       </el-form-item>
 
       <div class="detail-body">
-        <div v-for="(item, index) in data.detailList" :key="index">
+        <div v-for="(item, index) in data.flow_params.detailList" :key="index">
           <h4 class="detail-header">报销明细({{ index + 1 }})</h4>
           <el-form-item label="物品名称：">
             {{ item.name }}
@@ -60,7 +60,7 @@
         </el-timeline>
       </div>
 
-      <div v-if="reEdit" align="center">
+      <div v-if="reEdit || reStart" align="center">
         <el-button type="primary" round style="width: 200px; margin-top: 20px" @click="handleEdit">重新编辑</el-button>
       </div>
     </el-form>
@@ -77,9 +77,7 @@ export default {
     data: {
       type: Object,
       default: () => {
-        return {
-          detailList: []
-        };
+        return {};
       }
     },
     // 流程实例ID
@@ -88,7 +86,7 @@ export default {
     myself: Boolean
   },
   watch: {
-    instanceId(val) {
+    'data.id'(val) {
       this.query();
     }
   },
@@ -101,6 +99,10 @@ export default {
       }
       actLength = this.actList.filter(act => act.status === 1).length;
       return this.myself && actLength === 1;
+    },
+    // 已取消，已驳回的报销单可以基于该报销单重新开始报销
+    reStart() {
+      return this.myself && (this.data.status == 3 || this.data.status == 4);
     }
   },
   data() {
@@ -115,13 +117,13 @@ export default {
   },
   methods: {
     async query() {
-      if (this.instanceId) {
+      if (this.data.id) {
         this.actList = [];
         const res = await this.$axios({
           url: '/api/reimbur/query-instance-process-status',
           method: 'GET',
           params: {
-            id: this.instanceId
+            id: this.data.id
           }
         });
         this.actList = res.data;
@@ -154,7 +156,11 @@ export default {
     },
     handleEdit() {
       this.$emit('close');
-      this.$router.push({ path: '/reimbur/edit/' + this.instanceId });
+      if (this.reEdit) {
+        this.$router.push({ path: '/reimbur/edit/' + this.data.id });
+      } else if (this.reStart) {
+        this.$router.push({ path: '/reimbur/add?oid=' + this.data.id });
+      }
     },
     // 获取科目层级
     getCascaderLabel(value) {
