@@ -40,7 +40,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="部门：" prop="b_dept_id">
-            <el-select v-model="form.b_dept_id" placeholder="申请人所在部门">
+            <el-select v-model="form.b_dept_id" :disabled="edit" placeholder="申请人所在部门">
               <el-option v-for="item in deptList" :key="item.id" :label="item.dept_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
