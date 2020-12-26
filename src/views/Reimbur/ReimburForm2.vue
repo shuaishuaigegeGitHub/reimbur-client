@@ -48,7 +48,7 @@
           </tr>
         </tbody>
       </table>
-      <div class="stamp">
+      <div v-if="form.status == 2" class="stamp">
         <div class="stamp-inside"><span>审批通过</span></div>
       </div>
     </div>

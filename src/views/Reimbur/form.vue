@@ -122,10 +122,7 @@
           </el-col>
         </el-row>
         <el-form-item label="发票号：">
-          <el-input
-            v-model.trim="item.receipt_number"
-            style="max-width: 500px"
-          ></el-input>
+          <el-input v-model.trim="item.receipt_number" style="max-width: 500px"></el-input>
         </el-form-item>
         <el-form-item label="单价(元)：">
           <el-input
@@ -456,7 +453,6 @@ export default {
   async mounted() {
     if (this.$store.state.user.user) {
       this.form.a_user_id = this.$store.state.user.user.uid;
-      this.form.b_user_id = this.$store.state.user.user.uid;
     }
     this.userList = await getAllUser();
     this.deptList = await getAllDept();

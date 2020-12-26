@@ -11,9 +11,6 @@
         （<i>{{ data.flow_params.b_dept_name }}</i
         >）
       </el-form-item>
-      <el-form-item label="发票号：">
-        {{ data.flow_params.receipt_number }}
-      </el-form-item>
       <el-form-item label="申请类型：">
         {{ data.flow_params.apply_type }}
       </el-form-item>
@@ -28,6 +25,9 @@
       <div class="detail-body">
         <div v-for="(item, index) in data.flow_params.detailList" :key="index">
           <h4 class="detail-header">报销明细({{ index + 1 }})</h4>
+          <el-form-item label="发票号：">
+            {{ item.receipt_number }}
+          </el-form-item>
           <el-form-item label="物品名称：">
             {{ item.name }}
           </el-form-item>
