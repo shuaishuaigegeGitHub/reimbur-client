@@ -19,6 +19,7 @@ export const getAllUser = async () => {
     return {
       id: item.user_id,
       dept_id: item.dept_id,
+      dept_id_list: item.ancestors.split(','),
       user_name: item.user_name,
       avatar: item.avatar
     };

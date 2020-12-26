@@ -6,14 +6,14 @@
       <el-row :gutter="10">
         <el-col :span="8">
           <el-form-item label="填单人：" prop="a_user_id">
-            <el-select v-model="form.a_user_id" :disabled="edit" filterable>
+            <el-select v-model="form.a_user_id" disabled filterable>
               <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="部门：" prop="a_dept_id">
-            <el-select v-model="form.a_dept_id" placeholder="填单人所在部门">
+            <el-select v-model="form.a_dept_id" disabled placeholder="填单人所在部门">
               <el-option v-for="item in deptList" :key="item.id" :label="item.dept_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -437,6 +437,9 @@ export default {
     },
     // 申请人切换
     async handleChange(val) {
+      const user = this.userList.find(item => item.id === val);
+      const dept = this.deptList.find(item => user.dept_id_list.includes(item.id + ''));
+      this.form.b_dept_id = dept.id;
       const res = await this.$axios({
         url: '/api/reimbur/base-data/' + val
       });
@@ -448,15 +451,26 @@ export default {
         this.form.bank_account = res.data.bank_account;
         this.form.bank_address = res.data.bank_address;
       }
+    },
+    fillAUserId() {
+      if (this.$store.state.user.user) {
+        this.form.a_user_id = this.$store.state.user.user.uid;
+        const user = this.userList.find(item => item.id === this.form.a_user_id);
+        const dept = this.deptList.find(item => user.dept_id_list.includes(item.id + ''));
+        this.form.a_dept_id = dept.id;
+      }
     }
   },
   async mounted() {
-    if (this.$store.state.user.user) {
-      this.form.a_user_id = this.$store.state.user.user.uid;
-    }
     this.userList = await getAllUser();
     this.deptList = await getAllDept();
     this.querySubject();
+    setTimeout(() => {
+      this.fillAUserId();
+    }, 1000);
+  },
+  activated() {
+    this.fillAUserId();
   }
 };
 </script>
