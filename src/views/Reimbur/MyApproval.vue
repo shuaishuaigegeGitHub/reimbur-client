@@ -51,6 +51,7 @@
           <el-button type="primary" size="small" plain @click="handleShow(row)">{{
             row.status == 1 && !row.refext ? '审批' : '查看'
           }}</el-button>
+          <el-button size="small" @click="handlePrint(row)">打印</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -102,15 +103,31 @@
         </el-row>
       </div>
     </el-drawer>
+
+    <el-dialog :visible.sync="print.visible" title="报销单" width="800px">
+      <div align="center">
+        <el-radio-group v-model="print.type">
+          <el-radio-button label="1">费用报销单</el-radio-button>
+          <!-- <el-radio-button label="2">差旅费用报销单</el-radio-button> -->
+          <el-radio-button label="3">报销单</el-radio-button>
+        </el-radio-group>
+      </div>
+      <ReimburForm1 v-show="print.type == 1" :form="print.data" :actList="print.actList"></ReimburForm1>
+      <ReimburForm2 v-show="print.type == 3" :form="print.data" :actList="print.actList"></ReimburForm2>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import BaoXiaoDetail from './detail';
+import ReimburForm1 from './ReimburForm1';
+import ReimburForm2 from './ReimburForm2';
 
 export default {
   components: {
-    BaoXiaoDetail
+    BaoXiaoDetail,
+    ReimburForm1,
+    ReimburForm2
   },
   data() {
     return {
@@ -136,6 +153,15 @@ export default {
       drawer: {
         visible: false,
         data: {}
+      },
+      print: {
+        visible: false,
+        type: '3',
+        data: {
+          flow_params: {}
+        },
+        // 审批记录
+        actList: []
       }
     };
   },
@@ -254,6 +280,23 @@ export default {
           this.$message.success('操作成功');
         });
       });
+    },
+    // 打印预览
+    async handlePrint(row) {
+      this.print.visible = true;
+      this.print.data = row;
+      const res = await this.$axios({
+        url: '/api/reimbur/query-instance-process-status',
+        method: 'GET',
+        params: {
+          id: row.id
+        }
+      });
+      // 去掉第一个
+      res.data.shift();
+      // 去掉最后一个
+      res.data.pop();
+      this.print.actList = res.data;
     }
   },
   mounted() {

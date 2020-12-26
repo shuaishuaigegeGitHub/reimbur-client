@@ -1,91 +1,93 @@
 <template>
   <div style="padding-top: 50px">
-    <div class="cost-form">
-      <div class="form-header">
-        <div class="form-empty"></div>
-        <div class="form-title">
-          <span>费用报销单</span>
+    <div id="cost-form">
+      <div v-for="(main, index) in formList" :key="'main-' + index" class="cost-form">
+        <div class="form-header">
+          <div class="form-empty"></div>
+          <div class="form-title">
+            <span>费用报销单</span>
+          </div>
+          <div class="form-no">
+            <span class="label">编号</span>
+            <span class="value text--black">{{ formList.length }}（{{ index + 1 }}/{{ formList.length }}）</span>
+          </div>
         </div>
-        <div class="form-no">
-          <span class="label">编号</span>
-          <span class="value text--black"></span>
+
+        <div class="form-subtitle">
+          <div class="dept">
+            部门<span class="dept-input text--black" align="center">{{ form.flow_params.b_dept_name }}</span>
+          </div>
+          <div class="date">
+            报销日期：
+            <span class="year-input text--black" align="center">{{ time[0] }}</span>
+            <span class="year-label">年</span>
+            <span class="month-input text--black" align="center">{{ time[1] }}</span>
+            <span class="month-label">月</span>
+            <span class="date-input text--black" align="center">{{ time[2] }}</span>
+            <span class="date-label">日</span>
+          </div>
         </div>
-      </div>
 
-      <div class="form-subtitle">
-        <div class="dept">
-          部门<span class="dept-input text--black" align="center">{{ form.flow_params.b_dept_name }}</span>
+        <div class="form-content">
+          <table border="1" cellspacing="0px" bordercolor="#8173ea">
+            <thead style="color: #8173ea">
+              <tr>
+                <th class="summary" rowspan="2">摘要</th>
+                <th class="money-label" colspan="8">金额</th>
+                <th class="subject" rowspan="2">科目</th>
+                <th class="number" rowspan="2">单据张数</th>
+              </tr>
+              <tr>
+                <th class="money">十</th>
+                <th class="money">万</th>
+                <th class="money">千</th>
+                <th class="money">百</th>
+                <th class="money">十</th>
+                <th class="money">元</th>
+                <th class="money">角</th>
+                <th class="money">分</th>
+              </tr>
+            </thead>
+            <tbody align="center" class="text--black">
+              <tr v-for="(item, index) in main" :key="index" class="content-item">
+                <td class="first">{{ item.name }}</td>
+                <td v-for="(moneyBit, i) in item.money" :key="i + '-' + index">{{ moneyBit }}</td>
+                <td>{{ item.subjectName }}</td>
+                <td></td>
+              </tr>
+
+              <tr class="content-item">
+                <td class="first total">
+                  <span class="label" style="font-size: 14px; color: #8173ea">合计人民币（大写）</span>
+                  <span style="font-size: 12px">{{ formatMoney(sum(main)) }}</span>
+                </td>
+                <td v-for="(moneyBit, i) in moneySplit(sum(main), '￥')" :key="i">{{ moneyBit }}</td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="date">
-          报销日期：
-          <span class="year-input text--black" align="center">{{ time[0] }}</span>
-          <span class="year-label">年</span>
-          <span class="month-input text--black" align="center">{{ time[1] }}</span>
-          <span class="month-label">月</span>
-          <span class="date-input text--black" align="center">{{ time[2] }}</span>
-          <span class="date-label">日</span>
+
+        <div class="form-footer">
+          <span>财会主管</span>
+          <span class="name"></span>
+
+          <span>记账</span>
+          <span class="name"></span>
+
+          <span>出纳</span>
+          <span class="name"></span>
+
+          <span>部门主管</span>
+          <span class="name"></span>
+
+          <span>复核</span>
+          <span class="name"></span>
+
+          <span>报销人</span>
+          <span class="name"></span>
         </div>
-      </div>
-
-      <div class="form-content">
-        <table border="1" cellspacing="0px" bordercolor="#8173ea">
-          <thead style="color: #8173ea">
-            <tr>
-              <th class="summary" rowspan="2">摘要</th>
-              <th class="money-label" colspan="8">金额</th>
-              <th class="subject" rowspan="2">科目</th>
-              <th class="number" rowspan="2">单据张数</th>
-            </tr>
-            <tr>
-              <th class="money">十</th>
-              <th class="money">万</th>
-              <th class="money">千</th>
-              <th class="money">百</th>
-              <th class="money">十</th>
-              <th class="money">元</th>
-              <th class="money">角</th>
-              <th class="money">分</th>
-            </tr>
-          </thead>
-          <tbody align="center" class="text--black">
-            <tr v-for="(item, index) in detailList" :key="index" class="content-item">
-              <td class="first">{{ item.name }}</td>
-              <td v-for="(moneyBit, i) in item.money" :key="i + '-' + index">{{ moneyBit }}</td>
-              <td>{{ item.subjectName }}</td>
-              <td></td>
-            </tr>
-
-            <tr class="content-item">
-              <td class="first total">
-                <span class="label" style="font-size: 14px; color: #8173ea">合计人民币（大写）</span>
-                <span style="font-size: 12px">{{ formatMoney(total) }}</span>
-              </td>
-              <td v-for="(moneyBit, i) in moneySplit(total)" :key="i">{{ moneyBit }}</td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="form-footer">
-        <span>财会主管</span>
-        <span class="name"></span>
-
-        <span>记账</span>
-        <span class="name"></span>
-
-        <span>出纳</span>
-        <span class="name"></span>
-
-        <span>部门主管</span>
-        <span class="name"></span>
-
-        <span>复核</span>
-        <span class="name"></span>
-
-        <span>报销人</span>
-        <span class="name"></span>
       </div>
     </div>
     <div align="center" style="margin-top: 50px">
@@ -112,46 +114,49 @@ export default {
     };
   },
   computed: {
+    formList() {
+      let result = [];
+      const MAX_SIZE = 6;
+      const detailList = [...this.form.flow_params.detailList];
+      let temp = null;
+      while (detailList.length) {
+        temp = detailList.splice(0, MAX_SIZE).map(item => {
+          return {
+            name: item.name,
+            money: this.moneySplit(this.calMoney(item)),
+            money_value: this.calMoney(item),
+            subjectName: this.findSubjectName(item.subject_id)
+          };
+        });
+
+        while (temp.length < MAX_SIZE) {
+          temp.push({
+            name: '',
+            money: Array(8).fill(''),
+            subjectName: ''
+          });
+        }
+
+        result.push(temp);
+      }
+      return result;
+    },
     time: function() {
       return this.form.flow_params.b_date.split('-');
-    },
-    total: function() {
-      return this.form.flow_params.detailList
-        .map(item => this.calMoney(item))
-        .reduce((prev, cur) => {
-          return NP.round(NP.plus(prev, cur), 2);
-        }, 0);
-    },
-    detailList: function() {
-      const list = [];
-      this.form.flow_params.detailList.forEach(item => {
-        list.push({
-          name: item.name,
-          money: this.moneySplit(this.calMoney(item)),
-          subjectName: this.findSubjectName(item.subject_id)
-        });
-      });
-      // 最少6个
-      const MIN = 6;
-      while (list.length < 6) {
-        list.push({
-          name: '',
-          money: Array(8).fill(''),
-          subjectName: ''
-        });
-      }
-      return list;
     }
   },
   methods: {
     printOrder() {
-      Print('.cost-form');
+      Print('#cost-form');
     },
-    moneySplit(money) {
+    moneySplit(money, symbol) {
       let moneyStr = Number(money)
         .toFixed(2)
         .replace('.', '');
       let moneyArr = moneyStr.split('');
+      if (symbol && moneyArr.length < 8) {
+        moneyArr.unshift(symbol);
+      }
       while (moneyArr.length < 8) {
         moneyArr.unshift('');
       }
@@ -161,7 +166,21 @@ export default {
       return NP.round(NP.times(data.money, data.number), 2);
     },
     formatMoney(money) {
-      return numberUitl.num2Capital(money, 'rmb_capital');
+      let moneyStr = numberUitl.num2Capital(money, 'rmb_capital');
+      if (Number.isInteger(money)) {
+        // 没有小数点的加整
+        moneyStr += '整';
+      }
+      return moneyStr.replace('圆', '元');
+    },
+    // 计算合计金额
+    sum(list) {
+      return list
+        .map(item => item.money_value)
+        .filter(item => item)
+        .reduce((prev, cur) => {
+          return NP.round(NP.plus(prev, cur), 2);
+        }, 0);
     },
     findSubjectName(subjectId) {
       let result = '';
@@ -209,6 +228,7 @@ export default {
 <style lang="scss" scoped>
 .cost-form {
   padding: 0 20px;
+  margin-bottom: 50px;
   font-weight: normal;
   font-size: 14px;
   color: #8173ea;
