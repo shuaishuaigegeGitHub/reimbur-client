@@ -33,7 +33,7 @@
       <el-row :gutter="10">
         <el-col :span="8">
           <el-form-item label="申请人：" prop="b_user_id">
-            <el-select v-model="form.b_user_id" :disabled="edit" filterable>
+            <el-select v-model="form.b_user_id" :disabled="edit" filterable @change="handleChange">
               <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
@@ -124,7 +124,6 @@
         <el-form-item label="发票号：">
           <el-input
             v-model.trim="item.receipt_number"
-            placeholder="多个发票号中间用中文逗号分隔，例如：111，333，456"
             style="max-width: 500px"
           ></el-input>
         </el-form-item>
@@ -438,6 +437,20 @@ export default {
     },
     setForm(form) {
       this.form = form;
+    },
+    // 申请人切换
+    async handleChange(val) {
+      const res = await this.$axios({
+        url: '/api/reimbur/base-data/' + val
+      });
+      if (res.data) {
+        // 填充报销基本信息
+        this.form.b_user_id = res.data.b_user_id;
+        this.form.b_dept_id = res.data.b_dept_id;
+        this.form.payee = res.data.payee;
+        this.form.bank_account = res.data.bank_account;
+        this.form.bank_address = res.data.bank_address;
+      }
     }
   },
   async mounted() {

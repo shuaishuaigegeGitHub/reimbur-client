@@ -80,8 +80,6 @@ export default {
         return {};
       }
     },
-    // 流程实例ID
-    instanceId: Number,
     // 是否是自己在查看
     myself: Boolean
   },
