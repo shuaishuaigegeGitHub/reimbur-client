@@ -85,10 +85,11 @@
         </el-form-item>
         <el-form-item label="审批人：">
           <div class="approve-wrap">
-            <div v-for="item in form.approvers" :key="'approve-' + item.id" class="approve-item">
+            <div v-for="(item, index) in form.approvers" :key="'approve-' + item.id" class="approve-item">
               <el-avatar shape="square" size="large" :src="item.avatar">{{ item.user_name.slice(0, 1) }}</el-avatar>
               <span>{{ item.user_name }}</span>
               <i class="el-icon-arrow-right"></i>
+              <span class="fl-close" @click="handleDelApprove(index)">x</span>
             </div>
             <el-select v-model="approveUser" @change="handleSelectApprove" placeholder="请选择审批人">
               <el-option
@@ -289,6 +290,9 @@ export default {
     },
     setForm(form) {
       this.form = form;
+    },
+    handleDelApprove(index) {
+      this.form.approvers.splice(index, 1);
     }
   },
   async mounted() {
@@ -318,10 +322,25 @@ export default {
     margin-right: 20px;
     position: relative;
 
-    i {
+    .el-icon-arrow-right {
       position: absolute;
       right: -10px;
       top: 16px;
+    }
+
+    .fl-close {
+      position: absolute;
+      cursor: pointer;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 14px;
+      width: 14px;
+      display: inline-block;
+      font-weight: normal;
+      background: black;
+      color: white;
+      top: -5px;
+      right: 5px;
     }
   }
 }
