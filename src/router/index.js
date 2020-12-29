@@ -49,6 +49,49 @@ let constantRoutesTemp = [
     ]
   },
   {
+    path: '/purchase',
+    show: true,
+    type: 1,
+    component: Layout,
+    meta: {
+      title: '采购管理',
+      icon: ''
+    },
+    redirect: '/purchase/index',
+    children: [
+      {
+        path: '/purchase/index',
+        type: 2,
+        show: true,
+        meta: {
+          title: '我的采购',
+          icon: ''
+        },
+        component: () => import('@/views/Purchase/Index')
+      },
+      {
+        path: '/purchase/add',
+        type: 2,
+        show: true,
+        meta: {
+          title: '采购申请',
+          icon: ''
+        },
+        component: () => import('@/views/Purchase/Add')
+      },
+      {
+        path: '/purchase/edit/:id',
+        type: 2,
+        show: false,
+        meta: {
+          title: '采购编辑',
+          icon: ''
+        },
+        component: () => import('@/views/Purchase/Edit')
+      }
+    ]
+  },
+  {
     path: '*',
     redirect: '/reimbur/index'
   }
