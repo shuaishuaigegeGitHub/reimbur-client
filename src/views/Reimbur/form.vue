@@ -432,8 +432,13 @@ export default {
         }
       });
     },
-    setForm(form) {
+    setForm(form, b) {
       this.form = form;
+      if (b) {
+        this.handleChange(form.b_user_id);
+        this.fillAUserId();
+      }
+      console.log(this.form);
     },
     // 申请人切换
     async handleChange(val) {
@@ -468,9 +473,6 @@ export default {
     setTimeout(() => {
       this.fillAUserId();
     }, 1000);
-  },
-  activated() {
-    this.fillAUserId();
   }
 };
 </script>

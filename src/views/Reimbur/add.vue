@@ -58,6 +58,14 @@ export default {
           // 有数据
           this.$refs.baoXiaoForm.setForm(res.data);
         }
+      } else if (this.$route.query.pid) {
+        const res = await this.$axios({
+          url: '/api/purchase/reimbur/' + this.$route.query.pid
+        });
+        if (res.data) {
+          // 有数据
+          this.$refs.baoXiaoForm.setForm(res.data, true);
+        }
       }
     }
   },
