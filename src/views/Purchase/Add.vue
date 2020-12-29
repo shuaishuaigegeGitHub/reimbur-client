@@ -23,6 +23,7 @@ export default {
       });
 
       this.$message.success('提交成功');
+      this.$refs.purchaseForm.resetForm();
       this.$router.push({ path: '/purchase/index' });
     },
     // 查询旧采购实例

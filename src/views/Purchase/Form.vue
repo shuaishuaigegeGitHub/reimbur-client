@@ -291,6 +291,23 @@ export default {
     setForm(form) {
       this.form = form;
     },
+    resetForm() {
+      this.form = {
+        detail: [
+          {
+            money: 0,
+            number: 1,
+            norm: '',
+            unit: '',
+            subject_id: null,
+            name: ''
+          }
+        ],
+        // 审批人
+        approvers: [],
+        remark: ''
+      };
+    },
     handleDelApprove(index) {
       this.form.approvers.splice(index, 1);
     }
