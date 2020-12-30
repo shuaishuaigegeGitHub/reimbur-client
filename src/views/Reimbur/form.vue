@@ -319,7 +319,9 @@ export default {
           };
           return temp;
         }
-        this.subjectData = res.data.filter(item => item.id.startsWith('20')).map(treeMap);
+        let subjectData = res.data.find(item => item.id.startsWith('20'));
+        // 采购，报销只需要 ’管理费用‘ 和 ’固定资产‘ 两个大科目即可
+        this.subjectData = subjectData.children.filter(item => item.id == '2002' || item.id == '2003').map(treeMap);
       });
     },
     subjectFilterMethod(node, keyword) {
@@ -438,7 +440,6 @@ export default {
         this.handleChange(form.b_user_id);
         this.fillAUserId();
       }
-      console.log(this.form);
     },
     // 申请人切换
     async handleChange(val) {

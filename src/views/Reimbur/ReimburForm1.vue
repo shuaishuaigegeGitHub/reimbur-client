@@ -52,7 +52,7 @@
               <tr v-for="(item, index) in main" :key="index" class="content-item">
                 <td class="first">{{ item.name }}</td>
                 <td v-for="(moneyBit, i) in item.money" :key="i + '-' + index">{{ moneyBit }}</td>
-                <td>{{ item.subjectName }}</td>
+                <td></td>
                 <td></td>
               </tr>
 
