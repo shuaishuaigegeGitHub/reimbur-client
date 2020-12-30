@@ -168,7 +168,7 @@ export default {
           url: '/api/purchase/reject',
           method: 'POST',
           data: {
-            id: this.drawer.data.id,
+            id: this.drawer.data.task_id,
             remark: this.form.remark,
             updatetime: this.drawer.data.updatetime
           }
@@ -200,7 +200,7 @@ export default {
           url: '/api/purchase/complete',
           method: 'POST',
           data: {
-            id: this.drawer.data.id,
+            id: this.drawer.data.task_id,
             remark: this.form.remark,
             updatetime: this.drawer.data.updatetime
           }
