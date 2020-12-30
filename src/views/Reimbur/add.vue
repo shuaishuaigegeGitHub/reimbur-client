@@ -5,15 +5,15 @@
       <div class="descriptor-content">
         <b>说明：</b>
         <ul>
-          <li>1、已有发票，付款类型为正常请款，否则，付款类型为预付请款。</li>
-          <li>2、正确填写发票号，发票号必须为纯数字。</li>
+          <li>1、已有发票，付款类型为正常请款，否则，付款类型为预付请款</li>
+          <li>2、正确填写发票号，发票号必须为纯数字</li>
           <li>
-            3、多个发票号请用中文逗号隔开，如果不知道什么是中文逗号，这里直接复制，格式如下：12345678，12345678。
+            3、发票号最长8个字符，只能由大写字母数字组成；多个发票号请用中文逗号隔开，这里直接复制，格式如下：12345678，A1234567
           </li>
-          <li>4、如果不知道科目怎么选择，请直接询问财务。</li>
-          <li>5、银行卡号，开户银行请正确填写，一经转账，无法修改。</li>
-          <li>6、银行卡号非招商银行的，必须填写开户银行，开户地址。</li>
-          <li>7、审批人选择自己的上级进行审批。</li>
+          <li>4、如果不知道科目怎么选择，请直接询问财务</li>
+          <li>5、银行卡号，开户银行请正确填写，一经转账，无法修改</li>
+          <li>6、银行卡号非招商银行的，必须填写开户银行，开户地址</li>
+          <li>7、审批人选择自己的上级进行审批</li>
         </ul>
       </div>
     </div>
@@ -35,18 +35,8 @@ export default {
         data: form
       }).then(res => {
         this.$notify.success('报销申请提交成功');
-        this.$confirm('报销提交成功，是否继续报销？', {
-          type: 'warning',
-          confirmButtonText: '继续',
-          cancelButtonText: '查看我的报销'
-        })
-          .then(() => {
-            // 继续报销。清空报销明细
-            this.$refs.baoXiaoForm.resetDetailList();
-          })
-          .catch(err => {
-            this.$router.push({ path: '/reimbur/index' });
-          });
+        this.$refs.baoXiaoForm.resetDetailList();
+        this.$router.push({ path: '/reimbur/index' });
       });
     },
     async queryInstance() {

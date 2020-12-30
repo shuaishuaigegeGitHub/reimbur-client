@@ -266,6 +266,7 @@ export default {
         payee: '',
         bank_name: '招商银行',
         bank_account: '',
+        bank_address: '',
         detailList: [
           {
             money: 0,
@@ -273,7 +274,8 @@ export default {
             unit: '',
             subject_id: null,
             name: '',
-            remark: ''
+            remark: '',
+            receipt_number: ''
           }
         ]
       },
@@ -289,7 +291,9 @@ export default {
         payee: [{ required: true, message: '请输入收款单位', trigger: 'blur' }],
         bank_account: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }],
         bank_address: [{ required: true, message: '请输入开户地址', trigger: 'blur' }]
-      }
+      },
+      // 发票号正则校验
+      receipt_number_regex: /[A-Z0-9]{6,8}/
     };
   },
   computed: {
@@ -386,6 +390,22 @@ export default {
       if (!detail.name) {
         this.$message.warning('请输入报销明细的物品名称');
         return false;
+      }
+      if (this.form.apply_type === '正常请款') {
+        // 正常请款都需要发票号，校验发票号是否有问题
+        if (!detail.receipt_number) {
+          this.$message.warning('正常请款需要填写发票号');
+          return false;
+        }
+      }
+      if (detail.receipt_number) {
+        let arr = detail.receipt_number.split('，');
+        for (let str of arr) {
+          if (!this.receipt_number_regex.test(str)) {
+            this.$message.error(`发票号【${str}】格式错误`);
+            return false;
+          }
+        }
       }
       return true;
     },
