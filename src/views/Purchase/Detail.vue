@@ -13,6 +13,18 @@
       <el-form-item label="备注：">
         {{ data.remark }}
       </el-form-item>
+      <el-form-item label="图片：">
+        <div class="image-wrap">
+          <div class="image-item" v-for="(item, index) in data.images" :key="index">
+            <el-image
+              style="width: 80px; height: 80px"
+              fit="cover"
+              :src="item"
+              :preview-src-list="data.images"
+            ></el-image>
+          </div>
+        </div>
+      </el-form-item>
       <el-form-item label="总采购金额：">
         <span class="money-color">{{ totalMoney | 1000 }}</span>
         元
@@ -238,6 +250,14 @@ export default {
       .desc {
         color: #666666;
       }
+    }
+  }
+
+  .image-wrap {
+    display: flex;
+
+    .image-item {
+      margin-right: 10px;
     }
   }
 }

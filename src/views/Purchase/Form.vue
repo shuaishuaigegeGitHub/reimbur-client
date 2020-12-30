@@ -17,6 +17,30 @@
       <el-form-item label="备注：">
         <el-input v-model="form.remark" type="textarea" placeholder="请输入"></el-input>
       </el-form-item>
+      <el-form-item label="图片：">
+        <div class="image-wrap">
+          <div class="image-item" v-for="(item, index) in form.images" :key="index">
+            <el-image
+              style="width: 80px; height: 80px"
+              fit="cover"
+              :src="item"
+              :preview-src-list="form.images"
+            ></el-image>
+          </div>
+          <div class="image-item">
+            <el-upload
+              class="purchase-upload"
+              :action="upload.action"
+              :headers="upload.headers"
+              :show-file-list="false"
+              :on-success="handleUplaodSuccess"
+              accept="image/*"
+            >
+              <i class="el-icon-plus purchase-uploader-icon"></i>
+            </el-upload>
+          </div>
+        </div>
+      </el-form-item>
 
       <h3 align="center">采购明细</h3>
       <div v-for="(item, index) in form.detail" :key="index">
@@ -113,6 +137,8 @@
 <script>
 import NP from 'number-precision';
 import { getAllUser, getAllDept } from '@/api/index';
+import config from '@/config';
+import { getToken } from '@/utils/auth';
 
 export default {
   props: {
@@ -144,6 +170,8 @@ export default {
         ],
         // 审批人
         approvers: [],
+        // 图片列表
+        images: [],
         remark: ''
       },
       approveUser: null,
@@ -170,7 +198,13 @@ export default {
       // 科目列表
       subjectData: [],
       // 用户列表
-      userList: []
+      userList: [],
+      upload: {
+        action: config.baseUrl + '/api/common/image-upload',
+        headers: {
+          token: getToken()
+        }
+      }
     };
   },
   computed: {
@@ -312,6 +346,13 @@ export default {
     },
     handleDelApprove(index) {
       this.form.approvers.splice(index, 1);
+    },
+    handleUplaodSuccess(res, file) {
+      if (res.code == 1000) {
+        this.form.images.push(res.data);
+      } else {
+        this.$message.error(res.message);
+      }
     }
   },
   async mounted() {
@@ -361,6 +402,41 @@ export default {
       top: -5px;
       right: 5px;
     }
+  }
+}
+
+.image-wrap {
+  display: flex;
+
+  .image-item {
+    margin-right: 10px;
+  }
+}
+</style>
+
+<style lang="scss">
+.purchase-upload {
+  .el-upload {
+    width: 80px;
+    height: 80px;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .el-upload:hover {
+    border-color: #409eff;
+  }
+
+  .purchase-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
   }
 }
 </style>
