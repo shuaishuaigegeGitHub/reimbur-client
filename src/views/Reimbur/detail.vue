@@ -121,7 +121,7 @@ export default {
           url: '/api/reimbur/query-instance-process-status',
           method: 'GET',
           params: {
-            id: this.data.id
+            id: this.data.instance_id
           }
         });
         this.actList = res.data;

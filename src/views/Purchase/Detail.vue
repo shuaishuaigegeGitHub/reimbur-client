@@ -124,7 +124,7 @@ export default {
           url: '/api/purchase/query-instance-process-status',
           method: 'GET',
           params: {
-            id: this.data.id
+            id: this.data.p_id
           }
         });
         this.actList = res.data;
