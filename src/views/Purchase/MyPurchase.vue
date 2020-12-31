@@ -45,6 +45,11 @@
       <el-table-column label="申请时间" prop="createtime" align="center" min-width="200px"></el-table-column>
       <el-table-column label="最近一次操作人" prop="update_by" align="center" min-width="150px"></el-table-column>
       <el-table-column label="最近一次操作时间" prop="updatetime" align="center" min-width="200px"></el-table-column>
+      <el-table-column label="采购金额" align="center">
+        <template slot-scope="{ row }">
+          {{ calTotlaMoney(row) | 1000 }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="300">
         <template slot-scope="{ row }">
           <el-button type="primary" size="small" @click="handleShow(row)">查看</el-button>
@@ -75,6 +80,7 @@
 
 <script>
 import PurchaseDetail from './Detail';
+import NP from 'number-precision';
 
 export default {
   components: {
@@ -146,6 +152,14 @@ export default {
     // 一键报销
     handleReimbur(row) {
       this.$router.push({ path: '/reimbur/add?pid=' + row.id });
+    },
+    calTotlaMoney(row) {
+      let totalMoney = row.detail
+        .map(item => NP.round(NP.times(item.number, item.money), 2))
+        .reduce((prev, cur) => {
+          return NP.round(NP.plus(prev, cur), 2);
+        }, 0);
+      return totalMoney;
     }
   },
   activated() {
