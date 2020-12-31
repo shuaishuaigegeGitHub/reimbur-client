@@ -46,6 +46,11 @@
         </template>
       </el-table-column>
       <el-table-column label="申请时间" prop="createtime" align="center"></el-table-column>
+      <el-table-column label="报销金额" align="center">
+        <template slot-scope="{ row }">
+          {{ Number(row.flow_params.total_money) | 1000 }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="{ row }">
           <el-button type="primary" size="small" plain @click="handleShow(row)">{{
