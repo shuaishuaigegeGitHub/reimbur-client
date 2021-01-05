@@ -307,7 +307,9 @@ export default {
         }
         let subjectData = res.data.find(item => item.id.startsWith('20'));
         // 采购，报销只需要 ’管理费用‘ 和 ’固定资产‘ 两个大科目即可
-        this.subjectData = subjectData.children.map(treeMap);
+        this.subjectData = subjectData.children
+          .filter(item => item.id == '2002' || item.id == '2003' || item.id == '2008')
+          .map(treeMap);
       });
     },
     subjectFilterMethod(node, keyword) {
