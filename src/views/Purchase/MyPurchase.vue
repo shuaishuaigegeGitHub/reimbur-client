@@ -25,6 +25,9 @@
               @change="query"
             ></el-date-picker>
           </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="query">查询</el-button>
+          </el-form-item>
         </el-form>
       </el-col>
       <el-col :span="4" align="right">
@@ -92,7 +95,7 @@ export default {
       list: [],
       count: 0,
       filters: {
-        status: 0,
+        status: 1,
         applyTime: null,
         page: 1,
         size: 10

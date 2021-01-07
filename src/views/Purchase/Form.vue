@@ -374,8 +374,15 @@ export default {
         ],
         // 审批人
         approvers: [],
+        copys: [],
         remark: ''
       };
+    },
+    // 设置抄送人列表
+    setCopyList(copyList) {
+      if (copyList) {
+        this.form.copys = copyList;
+      }
     },
     handleDelApprove(index) {
       this.form.approvers.splice(index, 1);

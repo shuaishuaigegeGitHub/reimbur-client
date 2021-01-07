@@ -26,7 +26,7 @@ export default {
       this.$refs.purchaseForm.resetForm();
       this.$router.push({ path: '/purchase/index' });
     },
-    // 查询旧采购实例
+    // 查询旧采购实例，或者获取最近一次的抄送人列表
     async queryInstance() {
       if (this.$route.query.pid) {
         const res = await this.$axios({
@@ -36,6 +36,13 @@ export default {
           // 有数据
           delete res.data.id;
           this.$refs.purchaseForm.setForm(res.data);
+        }
+      } else {
+        const res = await this.$axios({
+          url: '/api/purchase/last-copy'
+        });
+        if (res.data) {
+          this.$refs.purchaseForm.setCopyList(res.data);
         }
       }
     }
