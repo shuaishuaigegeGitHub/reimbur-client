@@ -1,9 +1,9 @@
 <template>
   <div>
-    <el-form :model="form" label-width="120px" :rules="rules" ref="applyForm">
+    <el-form :model="form" label-width="130px" :rules="rules" ref="applyForm">
       <h3 align="center">基本信息</h3>
       <el-divider></el-divider>
-      <el-form-item label="期望交付日期：">
+      <el-form-item label="期望交付日期：" prop="date">
         <el-date-picker
           v-model="form.date"
           type="date"
@@ -11,7 +11,7 @@
           placeholder="请选择日期"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item label="申请事由：">
+      <el-form-item label="申请事由：" prop="reasons">
         <el-input v-model="form.reasons" type="textarea" placeholder="请输入采购事由"></el-input>
       </el-form-item>
       <el-form-item label="备注：">
@@ -125,6 +125,19 @@
             </el-select>
           </div>
         </el-form-item>
+        <el-form-item label="抄送人：">
+          <div class="approve-wrap">
+            <div v-for="(item, index) in form.copys" :key="'copy-' + item.id" class="approve-item">
+              <el-avatar shape="square" size="large" :src="item.avatar">{{ item.user_name.slice(0, 1) }}</el-avatar>
+              <span>{{ item.user_name }}</span>
+              <i class="el-icon-plus"></i>
+              <span class="fl-close" @click="handleDelCopy(index)">x</span>
+            </div>
+            <el-select v-model="copyUser" @change="handleSelectCopy" placeholder="请选择抄送人">
+              <el-option v-for="item in copyList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
+            </el-select>
+          </div>
+        </el-form-item>
       </div>
 
       <div class="footer">
@@ -170,12 +183,18 @@ export default {
         ],
         // 审批人
         approvers: [],
+        // 抄送人
+        copys: [],
         // 图片列表
         images: [],
         remark: ''
       },
       approveUser: null,
-      rules: {},
+      copyUser: null,
+      rules: {
+        date: [{ required: true, message: '请选择期望交付日期', trigger: 'blur' }],
+        reasons: [{ required: true, message: '请输入申请事由', trigger: 'blur' }]
+      },
       // 单位列表
       unitList: [
         {
@@ -221,6 +240,12 @@ export default {
     approveList() {
       return this.userList.filter(item => {
         return !this.form.approvers.find(approve => approve.id == item.id);
+      });
+    },
+    // 抄送人列表
+    copyList() {
+      return this.userList.filter(item => {
+        return !this.form.copys.find(approve => approve.id == item.id);
       });
     }
   },
@@ -268,7 +293,7 @@ export default {
     handleSubmit() {
       this.$refs.applyForm.validate(valid => {
         if (valid) {
-          if (!this.form.approvers) {
+          if (!this.form.approvers || this.form.approvers.length <= 0) {
             return this.$message.warning('至少选择一个审批人');
           }
           for (let detail of this.form.detail) {
@@ -326,6 +351,12 @@ export default {
       this.form.approvers.push(user);
       this.approveUser = null;
     },
+    // 选择抄送人事件
+    handleSelectCopy(val) {
+      const user = this.userList.find(item => item.id === val);
+      this.form.copys.push(user);
+      this.copyUser = null;
+    },
     setForm(form) {
       this.form = form;
     },
@@ -348,6 +379,9 @@ export default {
     },
     handleDelApprove(index) {
       this.form.approvers.splice(index, 1);
+    },
+    handleDelCopy(index) {
+      this.form.copys.splice(index, 1);
     },
     handleUplaodSuccess(res, file) {
       if (res.code == 1000) {
@@ -384,7 +418,8 @@ export default {
     margin-right: 20px;
     position: relative;
 
-    .el-icon-arrow-right {
+    .el-icon-arrow-right,
+    .el-icon-plus {
       position: absolute;
       right: -10px;
       top: 16px;

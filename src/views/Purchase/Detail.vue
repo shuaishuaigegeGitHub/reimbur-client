@@ -39,12 +39,16 @@
           <el-form-item label="规格：">
             {{ item.norm }}
           </el-form-item>
-          <el-form-item label="价格：">
-            <span class="money-color">{{ calTotalMoney(item.money, item.number) }}</span>
+          <el-form-item label="单价：">
+            <span class="money-color">{{ Number(item.money) | 1000 }}</span>
             元
           </el-form-item>
-          <el-form-item label="单位：">
-            {{ item.unit }}
+          <el-form-item label="数量：">
+            <span>{{ item.number + ' ' + item.unit }}</span>
+          </el-form-item>
+          <el-form-item label="总价格：">
+            <span class="money-color">{{ calTotalMoney(item.money, item.number) }}</span>
+            元
           </el-form-item>
           <el-form-item label="科目：">
             <span>{{ getCascaderLabel(item.subject_id) }}</span>
