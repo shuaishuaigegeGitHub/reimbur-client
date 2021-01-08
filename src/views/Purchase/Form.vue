@@ -223,7 +223,10 @@ export default {
         headers: {
           token: getToken()
         }
-      }
+      },
+
+      // 定时器
+      timer: null
     };
   },
   computed: {
@@ -396,11 +399,35 @@ export default {
       } else {
         this.$message.error(res.message);
       }
+    },
+    // 加载本地缓存
+    loadLocalData() {
+      setTimeout(() => {
+        if (!this.form.id) {
+          let str = sessionStorage.getItem('purchase:add');
+          if (str) {
+            this.form = JSON.parse(str);
+          }
+
+          this.timer = setInterval(() => {
+            sessionStorage.setItem('purchase:add', JSON.stringify(this.form));
+          }, 3000);
+        }
+      }, 1000);
     }
   },
   async mounted() {
     this.userList = await getAllUser();
     this.querySubject();
+  },
+  activated() {
+    this.loadLocalData();
+  },
+  deactivated() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
   }
 };
 </script>

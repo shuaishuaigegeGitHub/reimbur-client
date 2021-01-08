@@ -24,6 +24,8 @@ export default {
 
       this.$message.success('提交成功');
       this.$refs.purchaseForm.resetForm();
+      // 删除缓存
+      sessionStorage.removeItem('purchase:add');
       this.$router.push({ path: '/purchase/index' });
     },
     // 查询旧采购实例，或者获取最近一次的抄送人列表
