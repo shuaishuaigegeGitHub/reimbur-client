@@ -293,7 +293,10 @@ export default {
         bank_address: [{ required: true, message: '请输入开户地址', trigger: 'blur' }]
       },
       // 发票号正则校验
-      receipt_number_regex: /[A-Z0-9]{6,8}/
+      receipt_number_regex: /[A-Z0-9]{6,8}/,
+
+      // 定时器
+      timer: null
     };
   },
   computed: {
@@ -487,6 +490,21 @@ export default {
         const dept = this.deptList.find(item => user.dept_id_list.includes(item.id + ''));
         this.form.a_dept_id = dept.id;
       }
+    },
+    // 加载本地缓存
+    loadLocalData() {
+      setTimeout(() => {
+        if (!this.form.id) {
+          let str = sessionStorage.getItem('reimbur:add');
+          if (str) {
+            this.form = JSON.parse(str);
+          }
+
+          this.timer = setInterval(() => {
+            sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
+          }, 3000);
+        }
+      }, 1200);
     }
   },
   async mounted() {
@@ -495,7 +513,16 @@ export default {
     this.querySubject();
     setTimeout(() => {
       this.fillAUserId();
-    }, 1000);
+    }, 800);
+  },
+  activated() {
+    this.loadLocalData();
+  },
+  deactivated() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
   }
 };
 </script>

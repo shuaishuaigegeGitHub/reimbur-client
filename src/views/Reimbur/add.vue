@@ -35,6 +35,7 @@ export default {
       }).then(res => {
         this.$notify.success('报销申请提交成功');
         this.$refs.baoXiaoForm.resetDetailList();
+        sessionStorage.removeItem('reimbur:add');
         this.$router.push({ path: '/reimbur/index' });
       });
     },
