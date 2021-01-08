@@ -189,7 +189,7 @@
           <span class="money">{{ totalMoney }}</span> 元
         </el-form-item>
         <el-form-item label="审批人：">
-          <el-select v-model="form.approve_user">
+          <el-select v-model="form.approve_user" filterable>
             <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
