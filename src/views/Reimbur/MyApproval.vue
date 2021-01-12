@@ -56,7 +56,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" plain @click="handleShow(row)">{{
+          <el-button type="primary" size="small" @click="handleShow(row)">{{
             row.status == 1 && !row.refext ? '审批' : '查看'
           }}</el-button>
           <el-button size="small" @click="handlePrint(row)">打印</el-button>
