@@ -56,9 +56,12 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" plain @click="handleShow(row)">{{
-            row.status == 1 && !row.refext ? '审批' : '查看'
-          }}</el-button>
+          <el-button v-if="row.status == 1 && !row.refext" type="primary" size="small" @click="handleShow(row)">
+            审批
+          </el-button>
+          <el-button v-else type="primary" size="small" plain @click="handleShow(row)">
+            查看
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -143,7 +146,7 @@ export default {
   },
   computed: {
     purchaseHeight() {
-      return this.drawer.data.status === 1 ? 'calc(100vh - 300px)' : 'calc(100vh - 100px)';
+      return this.drawer.data.status === 1 ? 'calc(100vh - 260px)' : 'calc(100vh - 100px)';
     }
   },
   methods: {

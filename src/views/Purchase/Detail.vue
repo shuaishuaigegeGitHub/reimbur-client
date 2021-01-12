@@ -57,20 +57,35 @@
       </div>
 
       <div class="workflow">
-        <h3 class="workflow-title">审核流程</h3>
+        <h3 class="workflow-title">流程</h3>
         <el-timeline>
-          <el-timeline-item v-for="(act, index) in actList" :key="index" :timestamp="act.time" :color="act.color">
-            <h3>{{ act.msg }}</h3>
+          <el-timeline-item v-for="(act, index) in actList" :key="index" :timestamp="act.time" :color="getColor(act)">
+            <h3 :style="{ color: act.flag === 2 ? '#838483' : '' }">{{ act.username + ' ' + act.msg }}</h3>
             <div class="desc">
-              {{ act.act_user }}
-              <span v-if="act.status" :style="{ color: act.status === 2 ? '#359e35' : '' }">
-                （{{ getStatus(act) }}）
-              </span>
+              <span v-if="act.status"> （{{ getStatus(act) }}） </span>
             </div>
-            <div v-if="act.remark">备注：{{ act.remark }}</div>
+            <div v-if="act.remark" class="remark">{{ act.remark }}</div>
           </el-timeline-item>
         </el-timeline>
+        <div>
+          <div v-if="comment.visible" class="comment-wrap">
+            <el-input v-model="comment.form.remark" type="textarea" placeholder="请输入评论"></el-input>
+            <el-row style="margin-top: 10px">
+              <el-col :span="12" align="center">
+                <el-button round @click="comment.visible = false" style="width: 90%">关 闭</el-button>
+              </el-col>
+              <el-col :span="12" align="center">
+                <el-button type="primary" round @click="handleAddComment" style="width: 90%">发 送</el-button>
+              </el-col>
+            </el-row>
+          </div>
+          <div v-else align="center">
+            <el-button type="success" plain @click="comment.visible = true" icon="el-icon-plus">添加评论</el-button>
+          </div>
+        </div>
       </div>
+
+      <el-divider></el-divider>
 
       <div v-if="reEdit || reStart" align="center">
         <el-button type="primary" round style="width: 200px; margin-top: 20px" @click="handleEdit">重新编辑</el-button>
@@ -129,10 +144,29 @@ export default {
       },
       actList: [],
       // 科目数据
-      subjectData: []
+      subjectData: [],
+
+      comment: {
+        visible: false,
+        form: {
+          remark: ''
+        }
+      }
     };
   },
   methods: {
+    getColor(row) {
+      switch (row.flag) {
+        case 1:
+          return '#409eff';
+        case 3:
+          return 'red';
+        case 4:
+          return 'red';
+        default:
+          return null;
+      }
+    },
     async query() {
       if (this.data.id) {
         this.actList = [];
@@ -213,6 +247,23 @@ export default {
         return temp;
       }
       this.subjectData = res.data.map(treeMap);
+    },
+    async handleAddComment() {
+      if (this.comment.form.remark === '') {
+        return this.$message.warning('请填写评论');
+      }
+      await this.$axios({
+        url: '/api/purchase/comment',
+        method: 'POST',
+        data: {
+          id: this.data.id,
+          remark: this.comment.form.remark
+        }
+      });
+      this.query();
+      this.$message.success('操作成功');
+      this.comment.form.remark = '';
+      this.comment.visible = false;
     }
   },
   mounted() {
@@ -253,6 +304,11 @@ export default {
 
       .desc {
         color: #666666;
+      }
+
+      .remark {
+        background-color: #dadada;
+        padding: 10px;
       }
     }
   }

@@ -459,12 +459,13 @@ export default {
         }
       });
     },
-    setForm(form, b) {
+    async setForm(form, b) {
       this.form = form;
       if (b) {
-        this.handleChange(form.b_user_id);
+        await this.handleChange(form.b_user_id);
         this.fillAUserId();
       }
+      sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
     },
     // 申请人切换
     async handleChange(val) {
