@@ -185,6 +185,9 @@
       <el-divider></el-divider>
 
       <div>
+        <el-form-item label="备注：">
+          <el-input v-model="form.remark" type="textarea" style="max-width: 500px"></el-input>
+        </el-form-item>
         <el-form-item label="总报销金额：">
           <span class="money">{{ totalMoney }}</span> 元
         </el-form-item>
@@ -292,7 +295,8 @@ export default {
           }
         ],
         // 抄送人列表
-        copys: []
+        copys: [],
+        remark: ''
       },
       rules: {
         a_user_id: [{ required: true, message: '请选择填单人', trigger: 'blur' }],

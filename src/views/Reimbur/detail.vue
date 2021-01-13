@@ -21,6 +21,9 @@
         <span class="money-color">{{ data.flow_params.total_money | 1000 }}</span>
         元
       </el-form-item>
+      <el-form-item label="备注：">
+        {{ data.flow_params.remark }}
+      </el-form-item>
 
       <div class="detail-body">
         <div v-for="(item, index) in data.flow_params.detailList" :key="index">
@@ -116,7 +119,7 @@ export default {
       let len = this.actList.filter(item => {
         return item.flag === 1 && !item.msg.includes('评论');
       }).length;
-      return len === 1;
+      return this.myself && len === 1;
     },
     // 已取消，已驳回的报销单可以基于该报销单重新开始报销
     reStart() {
