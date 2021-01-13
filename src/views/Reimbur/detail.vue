@@ -113,12 +113,10 @@ export default {
   computed: {
     // 是否可以编辑，只有还未审批过的流程才可以编辑
     reEdit() {
-      let actLength = this.actList.length;
-      if (actLength !== 2) {
-        return false;
-      }
-      actLength = this.actList.filter(act => act.status === 1).length;
-      return this.myself && actLength === 1;
+      let len = this.actList.filter(item => {
+        return item.flag === 1 && !item.msg.includes('评论');
+      }).length;
+      return len === 1;
     },
     // 已取消，已驳回的报销单可以基于该报销单重新开始报销
     reStart() {

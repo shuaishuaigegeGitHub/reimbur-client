@@ -20,10 +20,10 @@
             <td class="label">申请人部门</td>
             <td colspan="4">{{ form.flow_params.b_dept_name }}</td>
           </tr>
-          <tr>
+          <!-- <tr>
             <td class="label">申请事由</td>
             <td colspan="4">公司内网搭建、网络部署</td>
-          </tr>
+          </tr> -->
           <tr>
             <td class="label"></td>
             <td>名称</td>
@@ -44,7 +44,10 @@
           </tr>
           <tr v-for="(item, index) in fillActList" :key="index">
             <td v-if="index == 0" class="label" :rowspan="fillActList.length + 1">审批流程</td>
-            <td colspan="4" style="height: 24px">{{ item }}</td>
+            <td colspan="4" style="height: 24px">
+              <div>{{ item.remark }}</div>
+              <div>{{ item.username }} {{ item.msg }}</div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -83,10 +86,10 @@ export default {
       let temp = this.actList || [];
       let result = [];
       for (let act of temp) {
-        result.push(act.act_user + ' 已同意');
+        result.push(act);
       }
       while (result.length < 4) {
-        result.push('');
+        result.push({});
       }
       return result;
     }

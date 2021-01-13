@@ -193,6 +193,19 @@
             <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="抄送人：">
+          <div class="approve-wrap">
+            <div v-for="(item, index) in form.copys" :key="'copy-' + item.id" class="approve-item">
+              <el-avatar shape="square" size="large" :src="item.avatar">{{ item.user_name.slice(0, 1) }}</el-avatar>
+              <span>{{ item.user_name }}</span>
+              <i class="el-icon-plus"></i>
+              <span class="fl-close" @click="handleDelCopy(index)">x</span>
+            </div>
+            <el-select v-model="copyUser" @change="handleSelectCopy" placeholder="请选择抄送人">
+              <el-option v-for="item in copyList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
+            </el-select>
+          </div>
+        </el-form-item>
       </div>
 
       <div class="footer">
@@ -277,7 +290,9 @@ export default {
             remark: '',
             receipt_number: ''
           }
-        ]
+        ],
+        // 抄送人列表
+        copys: []
       },
       rules: {
         a_user_id: [{ required: true, message: '请选择填单人', trigger: 'blur' }],
@@ -296,7 +311,9 @@ export default {
       receipt_number_regex: /[A-Z0-9]{6,8}/,
 
       // 定时器
-      timer: null
+      timer: null,
+
+      copyUser: null
     };
   },
   computed: {
@@ -308,6 +325,12 @@ export default {
         .reduce((prev, cur) => {
           return NP.plus(prev, cur);
         }, 0);
+    },
+    // 抄送人列表
+    copyList() {
+      return this.userList.filter(item => {
+        return !this.form.copys.find(approve => approve.id == item.id);
+      });
     }
   },
   methods: {
@@ -467,6 +490,12 @@ export default {
       }
       sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
     },
+    setCopys(copys) {
+      if (!this.form.copys || !this.form.copys.length) {
+        this.form.copys = copys;
+        sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
+      }
+    },
     // 申请人切换
     async handleChange(val) {
       const user = this.userList.find(item => item.id === val);
@@ -495,7 +524,7 @@ export default {
     // 加载本地缓存
     loadLocalData() {
       setTimeout(() => {
-        if (!this.form.id) {
+        if (!this.edit) {
           let str = sessionStorage.getItem('reimbur:add');
           if (str) {
             this.form = JSON.parse(str);
@@ -506,6 +535,20 @@ export default {
           }, 3000);
         }
       }, 1200);
+    },
+    // 删除抄送人
+    handleDelCopy(index) {
+      this.form.copys.splice(index, 1);
+    },
+    // 选择抄送人事件
+    handleSelectCopy(val) {
+      const user = this.userList.find(item => item.id === val);
+      if (this.form.copys) {
+        this.form.copys.push(user);
+      } else {
+        this.form.copys = [user];
+      }
+      this.copyUser = null;
     }
   },
   async mounted() {
@@ -538,5 +581,37 @@ export default {
 }
 .footer {
   margin-left: 100px;
+}
+.approve-wrap {
+  display: flex;
+
+  .approve-item {
+    width: 50px;
+    line-height: 20px;
+    margin-right: 20px;
+    position: relative;
+
+    .el-icon-arrow-right,
+    .el-icon-plus {
+      position: absolute;
+      right: -10px;
+      top: 16px;
+    }
+
+    .fl-close {
+      position: absolute;
+      cursor: pointer;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 14px;
+      width: 14px;
+      display: inline-block;
+      font-weight: normal;
+      background: black;
+      color: white;
+      top: -5px;
+      right: 5px;
+    }
+  }
 }
 </style>

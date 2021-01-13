@@ -130,6 +130,7 @@
 import BaoXiaoDetail from './detail';
 import ReimburForm1 from './ReimburForm1';
 import ReimburForm2 from './ReimburForm2';
+import Bus from '@/utils/bus';
 
 export default {
   components: {
@@ -220,6 +221,7 @@ export default {
             this.drawer.visible = false;
             this.query();
             this.$message.success('操作成功');
+            Bus.$emit('resetCount');
           })
           .catch(err => {
             if (err.code === 506) {
@@ -252,6 +254,7 @@ export default {
             this.drawer.visible = false;
             this.query();
             this.$message.success('操作成功');
+            Bus.$emit('resetCount');
           })
           .catch(err => {
             if (err.code === 506) {

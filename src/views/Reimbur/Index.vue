@@ -8,6 +8,9 @@
         <div slot="label">我的审批<el-badge class="mark" :value="count" type="primary" /></div>
         <MyApproval></MyApproval>
       </el-tab-pane>
+      <el-tab-pane label="抄送给我" name="three">
+        <MyCopy></MyCopy>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -15,12 +18,15 @@
 <script>
 import MyReimbursement from './MyReimbursement';
 import MyApproval from './MyApproval';
+import MyCopy from './MyCopy';
+import Bus from '@/utils/bus';
 
 export default {
   name: 'Reimbur',
   components: {
     MyReimbursement,
-    MyApproval
+    MyApproval,
+    MyCopy
   },
   data() {
     return {
@@ -43,6 +49,7 @@ export default {
     if (this.$route.query.active) {
       this.activeName = this.$route.query.active;
     }
+    Bus.$on('resetCount', () => this.queryCount);
   }
 };
 </script>

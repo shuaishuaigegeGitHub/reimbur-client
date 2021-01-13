@@ -57,6 +57,17 @@ export default {
           this.$refs.baoXiaoForm.setForm(res.data, true);
         }
       }
+
+      if (!this.$route.query.oid) {
+        // 说明需要查询一下最近的抄送人列表数据了
+        const res = await this.$axios({
+          url: '/api/reimbur/last-copy'
+        });
+        if (res.data) {
+          // 有数据
+          this.$refs.baoXiaoForm.setCopys(res.data);
+        }
+      }
     }
   },
   activated() {
