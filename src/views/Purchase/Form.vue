@@ -115,7 +115,7 @@
               <i class="el-icon-arrow-right"></i>
               <span class="fl-close" @click="handleDelApprove(index)">x</span>
             </div>
-            <el-select v-model="approveUser" @change="handleSelectApprove" placeholder="请选择审批人">
+            <el-select v-model="approveUser" @change="handleSelectApprove" filterable placeholder="请选择审批人">
               <el-option
                 v-for="item in approveList"
                 :key="item.id"
@@ -133,7 +133,7 @@
               <i class="el-icon-plus"></i>
               <span class="fl-close" @click="handleDelCopy(index)">x</span>
             </div>
-            <el-select v-model="copyUser" @change="handleSelectCopy" placeholder="请选择抄送人">
+            <el-select v-model="copyUser" @change="handleSelectCopy" filterable placeholder="请选择抄送人">
               <el-option v-for="item in copyList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
             </el-select>
           </div>

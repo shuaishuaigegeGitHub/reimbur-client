@@ -204,7 +204,7 @@
               <i class="el-icon-plus"></i>
               <span class="fl-close" @click="handleDelCopy(index)">x</span>
             </div>
-            <el-select v-model="copyUser" @change="handleSelectCopy" placeholder="请选择抄送人">
+            <el-select v-model="copyUser" @change="handleSelectCopy" filterable placeholder="请选择抄送人">
               <el-option v-for="item in copyList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
             </el-select>
           </div>
