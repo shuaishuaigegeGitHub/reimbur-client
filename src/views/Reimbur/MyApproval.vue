@@ -80,6 +80,7 @@
     <el-drawer title="报销申请单" :visible.sync="drawer.visible" direction="rtl" size="500px">
       <div class="drawer-body">
         <bao-xiao-detail
+          ref="reimburDetail"
           class="bao-xiao-detail"
           :style="{ height: baoxiaoHeight }"
           :data="drawer.data"
@@ -218,10 +219,11 @@ export default {
           }
         })
           .then(res => {
-            this.drawer.visible = false;
+            this.$refs.reimburDetail.query();
             this.query();
             this.$message.success('操作成功');
             Bus.$emit('resetCount');
+            this.drawer.visible = false;
           })
           .catch(err => {
             if (err.code === 506) {
@@ -251,10 +253,11 @@ export default {
           }
         })
           .then(res => {
-            this.drawer.visible = false;
+            this.$refs.reimburDetail.query();
             this.query();
             this.$message.success('操作成功');
             Bus.$emit('resetCount');
+            this.drawer.visible = false;
           })
           .catch(err => {
             if (err.code === 506) {

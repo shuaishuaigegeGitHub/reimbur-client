@@ -88,6 +88,7 @@
     >
       <div class="drawer-body">
         <PurchaseDetail
+          ref="purchaseDetail"
           class="purchase-detail"
           :style="{ height: purchaseHeight }"
           :data="drawer.data"
@@ -193,10 +194,11 @@ export default {
           }
         })
           .then(res => {
-            this.drawer.visible = false;
+            this.$refs.purchaseDetail.query();
             this.query();
             this.$message.success('操作成功');
             Bus.$emit('purchaseResetCount');
+            this.drawer.visible = false;
           })
           .catch(err => {
             if (err.code === 506) {
@@ -226,10 +228,11 @@ export default {
           }
         })
           .then(res => {
-            this.drawer.visible = false;
+            this.$refs.purchaseDetail.query();
             this.query();
             this.$message.success('操作成功');
             Bus.$emit('purchaseResetCount');
+            this.drawer.visible = false;
           })
           .catch(err => {
             if (err.code === 506) {
