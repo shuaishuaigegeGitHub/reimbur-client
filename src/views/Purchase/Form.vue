@@ -395,7 +395,12 @@ export default {
     },
     handleUplaodSuccess(res, file) {
       if (res.code == 1000) {
-        this.form.images.push(res.data);
+        // 防止images为空的情况
+        if (!this.form.images) {
+          this.form.images = [res.data];
+        } else {
+          this.form.images.push(res.data);
+        }
       } else {
         this.$message.error(res.message);
       }
