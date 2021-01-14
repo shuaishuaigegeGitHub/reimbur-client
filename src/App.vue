@@ -43,4 +43,12 @@ export default {
     box-sizing: border-box;
   }
 }
+
+.el-image-viewer__wrapper {
+  .el-image-viewer__close {
+    .el-icon-circle-close {
+      color: white;
+    }
+  }
+}
 </style>

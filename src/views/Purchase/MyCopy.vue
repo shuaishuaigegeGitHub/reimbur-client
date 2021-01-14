@@ -59,7 +59,13 @@
       </el-pagination>
     </div>
 
-    <el-drawer title="采购申请单" :visible.sync="drawer.visible" direction="rtl" size="500px">
+    <el-drawer
+      title="采购申请单"
+      :visible.sync="drawer.visible"
+      direction="rtl"
+      size="500px"
+      :close-on-press-escape="false"
+    >
       <PurchaseDetail class="purchase-detail" :data="drawer.data" myself @close="handleCloseDetail"></PurchaseDetail>
     </el-drawer>
   </div>
