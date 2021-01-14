@@ -118,6 +118,7 @@
 <script>
 import PurchaseDetail from './Detail';
 import NP from 'number-precision';
+import Bus from '@/utils/bus';
 
 export default {
   components: {
@@ -195,6 +196,7 @@ export default {
             this.drawer.visible = false;
             this.query();
             this.$message.success('操作成功');
+            Bus.$emit('purchaseResetCount');
           })
           .catch(err => {
             if (err.code === 506) {
@@ -227,6 +229,7 @@ export default {
             this.drawer.visible = false;
             this.query();
             this.$message.success('操作成功');
+            Bus.$emit('purchaseResetCount');
           })
           .catch(err => {
             if (err.code === 506) {
