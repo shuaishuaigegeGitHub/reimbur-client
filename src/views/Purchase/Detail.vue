@@ -87,7 +87,7 @@
 
       <el-divider></el-divider>
 
-      <div class="copy">
+      <div v-if="data.copys && data.copys.length" class="copy">
         <h3 class="copy-title">抄送人</h3>
         <div class="approve-wrap">
           <div v-for="item in data.copys" :key="'copy-' + item.id" class="approve-item" align="center">

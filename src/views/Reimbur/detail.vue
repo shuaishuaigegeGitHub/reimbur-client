@@ -85,6 +85,16 @@
 
       <el-divider></el-divider>
 
+      <div v-if="data.flow_params.copys && data.flow_params.copys.length" class="copy">
+        <h3 class="copy-title">抄送人</h3>
+        <div class="approve-wrap">
+          <div v-for="item in data.flow_params.copys" :key="'copy-' + item.id" class="approve-item" align="center">
+            <el-avatar shape="square" size="large" :src="item.copys">{{ item.user_name.slice(0, 1) }}</el-avatar>
+            <span>{{ item.user_name }}</span>
+          </div>
+        </div>
+      </div>
+
       <div v-if="reEdit || reStart" align="center">
         <el-button type="primary" round style="width: 200px; margin-top: 20px" @click="handleEdit">重新编辑</el-button>
       </div>
@@ -111,6 +121,7 @@ export default {
   watch: {
     'data.id'(val) {
       this.query();
+      console.log(this.data);
     }
   },
   computed: {
@@ -298,6 +309,23 @@ export default {
         background-color: #dadada;
         padding: 10px;
       }
+    }
+  }
+
+  .copy-title {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background-color: #9ce0bd;
+  }
+
+  .approve-wrap {
+    display: flex;
+
+    .approve-item {
+      width: 50px;
+      line-height: 20px;
+      margin-right: 20px;
+      position: relative;
     }
   }
 }
