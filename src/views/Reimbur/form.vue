@@ -523,6 +523,7 @@ export default {
         const user = this.userList.find(item => item.id === this.form.a_user_id);
         const dept = this.deptList.find(item => user.dept_id_list.includes(item.id + ''));
         this.form.a_dept_id = dept.id;
+        sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
       }
     },
     // 加载本地缓存
