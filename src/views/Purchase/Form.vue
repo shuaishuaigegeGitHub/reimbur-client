@@ -286,10 +286,6 @@ export default {
         this.$message.warning('报销明细的单位必须填写');
         return false;
       }
-      if (!detail.subject_id) {
-        this.$message.warning('请选择报销明细的科目');
-        return false;
-      }
       return true;
     },
     // 提交

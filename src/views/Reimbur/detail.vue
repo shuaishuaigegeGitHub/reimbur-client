@@ -215,6 +215,9 @@ export default {
     },
     // 获取科目层级
     getCascaderLabel(value) {
+      if (!value) {
+        return '';
+      }
       const labels = [];
       const matchCascaderData = function(list) {
         list.forEach(item => {

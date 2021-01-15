@@ -415,10 +415,6 @@ export default {
         this.$message.warning('报销明细的单位必须填写');
         return false;
       }
-      if (!detail.subject_id) {
-        this.$message.warning('请选择报销明细的科目');
-        return false;
-      }
       if (!detail.name) {
         this.$message.warning('请输入报销明细的物品名称');
         return false;
