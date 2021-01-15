@@ -68,7 +68,7 @@
       <el-pagination
         @size-change="query"
         @current-change="query"
-        :current-page="filters.page"
+        :current-page.sync="filters.page"
         :page-sizes="[10, 15, 20, 50]"
         :page-size.sync="filters.size"
         layout="total, sizes, prev, pager, next, jumper"
