@@ -46,10 +46,30 @@
             元
           </el-form-item>
           <el-form-item label="科目：">
-            <span>{{ getCascaderLabel(item.subject_id) }}</span>
+            <el-cascader
+              v-if="subjectEdit"
+              style="width: 100%"
+              v-model="item.subject_id"
+              :options="subjectData"
+              clearable
+              filterable
+              :filter-method="subjectFilterMethod"
+              :props="{
+                label: 'name',
+                value: 'id',
+                emitPath: false
+              }"
+              @change="editSubject = true"
+            ></el-cascader>
+            <span v-else>{{ getCascaderLabel(item.subject_id) }}</span>
           </el-form-item>
           <el-form-item label="备注：">
             {{ item.remark }}
+          </el-form-item>
+        </div>
+        <div v-if="editSubject">
+          <el-form-item>
+            <el-button type="primary" @click="saveSubject">保存科目</el-button>
           </el-form-item>
         </div>
       </div>
@@ -121,7 +141,7 @@ export default {
   watch: {
     'data.id'(val) {
       this.query();
-      console.log(this.data);
+      this.editSubject = false;
     }
   },
   computed: {
@@ -135,6 +155,10 @@ export default {
     // 已取消，已驳回的报销单可以基于该报销单重新开始报销
     reStart() {
       return this.myself && (this.data.status == 3 || this.data.status == 4);
+    },
+    // 是否可编辑科目
+    subjectEdit() {
+      return !this.myself && this.data.status == 1;
     }
   },
   data() {
@@ -151,7 +175,10 @@ export default {
         form: {
           remark: ''
         }
-      }
+      },
+
+      // 是否编辑过科目
+      editSubject: false
     };
   },
   methods: {
@@ -178,6 +205,20 @@ export default {
           }
         });
         this.actList = res.data;
+      }
+    },
+    async saveSubject() {
+      if (this.editSubject) {
+        await this.$axios({
+          url: '/api/reimbur/save-subject',
+          method: 'POST',
+          data: {
+            task_id: this.data.task_id,
+            flow_params: this.data.flow_params
+          }
+        });
+        this.$message.success('保存科目成功');
+        this.editSubject = false;
       }
     },
     calTotalMoney(money, number) {
@@ -232,6 +273,15 @@ export default {
       matchCascaderData(this.subjectData);
       labels.shift();
       return labels.join(' / ');
+    },
+    // 科目过滤
+    subjectFilterMethod(node, keyword) {
+      let label = node.label;
+      if (label.includes(keyword)) {
+        return true;
+      }
+      let spell = label.spell('first', 'low');
+      return spell.includes(keyword);
     },
     // 查询科目数
     async querySubjectData() {
