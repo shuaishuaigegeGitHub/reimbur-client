@@ -91,7 +91,7 @@
         <h3 class="copy-title">抄送人</h3>
         <div class="approve-wrap">
           <div v-for="item in data.copys" :key="'copy-' + item.id" class="approve-item" align="center">
-            <el-avatar shape="square" size="large" :src="item.copys">{{ item.user_name.slice(0, 1) }}</el-avatar>
+            <el-avatar shape="square" size="large" :src="item.avatar">{{ item.user_name.slice(0, 1) }}</el-avatar>
             <span>{{ item.user_name }}</span>
           </div>
         </div>
