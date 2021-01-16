@@ -123,7 +123,6 @@ export default {
   watch: {
     'data.id'(val) {
       this.query();
-      console.log(this.data);
     }
   },
   computed: {

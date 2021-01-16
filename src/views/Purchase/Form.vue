@@ -358,6 +358,7 @@ export default {
     },
     setForm(form) {
       this.form = form;
+      sessionStorage.setItem('purchase:add', JSON.stringify(this.form));
     },
     resetForm() {
       this.form = {
