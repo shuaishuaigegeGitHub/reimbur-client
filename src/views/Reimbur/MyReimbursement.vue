@@ -200,7 +200,9 @@ export default {
       // 去掉第一个
       res.data.shift();
       // 去掉最后一个
-      res.data.pop();
+      if (row.status == 2) {
+        res.data.pop();
+      }
       this.print.actList = res.data;
     }
   },

@@ -37,7 +37,7 @@
     <el-table :data="list" border>
       <el-table-column label="申请人" prop="applicant" align="center"></el-table-column>
       <el-table-column label="付款类型" prop="flow_params.apply_type" align="center"></el-table-column>
-      <el-table-column label="状态" prop="status" align="center">
+      <el-table-column label="任务状态" prop="status" align="center">
         <template slot-scope="{ row }">
           <el-tag v-if="row.status === 1">
             {{ row.refext ? '已转账' : '待我审批' }}
@@ -45,6 +45,15 @@
           <el-tag v-else-if="row.status === 2" type="success">已结束</el-tag>
           <el-tag v-else-if="row.status === 3" type="info">已取消</el-tag>
           <el-tag v-else-if="row.status === 4" type="danger">已驳回</el-tag>
+          <el-tag v-else>未知状态</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="报销流程状态" prop="instance_status" align="center">
+        <template slot-scope="{ row }">
+          <el-tag v-if="row.instance_status === 1">审批中 </el-tag>
+          <el-tag v-else-if="row.instance_status === 2" type="success">已结束</el-tag>
+          <el-tag v-else-if="row.instance_status === 3" type="info">已取消</el-tag>
+          <el-tag v-else-if="row.instance_status === 4" type="danger">已驳回</el-tag>
           <el-tag v-else>未知状态</el-tag>
         </template>
       </el-table-column>
@@ -309,7 +318,9 @@ export default {
       // 去掉第一个
       res.data.shift();
       // 去掉最后一个
-      res.data.pop();
+      if (row.instance_status == 2) {
+        res.data.pop();
+      }
       this.print.actList = res.data;
     }
   },

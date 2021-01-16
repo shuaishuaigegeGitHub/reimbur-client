@@ -45,8 +45,17 @@
           <tr v-for="(item, index) in fillActList" :key="index">
             <td v-if="index == 0" class="label" :rowspan="fillActList.length + 1">审批流程</td>
             <td colspan="4" style="height: 24px">
-              <div>{{ item.remark }}</div>
-              <div>{{ item.username }} {{ item.msg }}</div>
+              <div class="process-wrap">
+                <div class="content">
+                  <div>{{ item.remark }}</div>
+                  <div>
+                    <b>{{ item.username }} {{ item.msg }}</b>
+                  </div>
+                </div>
+                <div class="time">
+                  {{ item.time }}
+                </div>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -177,6 +186,20 @@ export default {
         margin-top: 5px;
       }
     }
+  }
+}
+
+.process-wrap {
+  display: flex;
+
+  .content {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+
+  .time {
+    text-align: right;
+    width: 150px;
   }
 }
 </style>
