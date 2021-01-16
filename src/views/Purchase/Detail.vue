@@ -132,7 +132,7 @@ export default {
       if (actLength !== 2) {
         return false;
       }
-      actLength = this.actList.filter(act => act.status === 1).length;
+      actLength = this.actList.filter(act => act.flag === 1).length;
       return this.myself && actLength === 1;
     },
     // 已取消，已驳回的采购单可以基于该采购单重新开始采购
@@ -217,11 +217,7 @@ export default {
     },
     handleEdit() {
       this.$emit('close');
-      if (this.reEdit) {
-        this.$router.push({ path: '/purchase/edit/' + this.data.id });
-      } else if (this.reStart) {
-        this.$router.push({ path: '/purchase/add?pid=' + this.data.id });
-      }
+      this.$router.push({ path: '/purchase/edit/' + this.data.id });
     },
     // 获取科目层级
     getCascaderLabel(value) {
