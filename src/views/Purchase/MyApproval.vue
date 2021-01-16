@@ -210,9 +210,6 @@ export default {
     },
     // 同意
     handleThen() {
-      if (!this.form.remark) {
-        return this.$message.warning('请填写备注');
-      }
       this.$confirm('确定同意该采购？', {
         type: 'warning',
         confirmButtonText: '确定',
