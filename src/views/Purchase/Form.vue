@@ -26,6 +26,7 @@
               :src="item"
               :preview-src-list="form.images"
             ></el-image>
+            <span class="fl-close" @click="handleDelImage(index)">x</span>
           </div>
           <div class="image-item">
             <el-upload
@@ -152,6 +153,7 @@ import NP from 'number-precision';
 import { getAllUser, getAllDept } from '@/api/index';
 import config from '@/config';
 import { getToken } from '@/utils/auth';
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
   props: {
@@ -173,6 +175,7 @@ export default {
       form: {
         detail: [
           {
+            id: uuidv4(),
             money: 0,
             number: 1,
             norm: '',
@@ -256,6 +259,7 @@ export default {
     // 添加明细
     addDetail() {
       this.form.detail.push({
+        id: uuidv4(),
         name: '',
         money: 0,
         number: 1,
@@ -387,6 +391,9 @@ export default {
     handleDelApprove(index) {
       this.form.approvers.splice(index, 1);
     },
+    handleDelImage(index) {
+      this.form.images.splice(index, 1);
+    },
     handleDelCopy(index) {
       this.form.copys.splice(index, 1);
     },
@@ -483,6 +490,22 @@ export default {
 
   .image-item {
     margin-right: 10px;
+    position: relative;
+
+    .fl-close {
+      position: absolute;
+      cursor: pointer;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 14px;
+      width: 14px;
+      display: inline-block;
+      font-weight: normal;
+      background: black;
+      color: white;
+      top: -5px;
+      right: -5px;
+    }
   }
 }
 </style>
