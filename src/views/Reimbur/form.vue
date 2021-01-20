@@ -91,11 +91,11 @@
       </el-row>
 
       <el-row>
-        <el-form-item label="开户银行：">
+        <el-form-item label="开户银行：" prop="bank_name">
           <el-input
             v-model.trim="form.bank_name"
             style="max-width: 500px"
-            placeholder="银行卡号不是招商银行的需要提供开户银行，例如：工商银行"
+            placeholder="例如：工商银行，招商银行"
           ></el-input>
         </el-form-item>
       </el-row>
@@ -185,12 +185,15 @@
       <el-divider></el-divider>
 
       <div>
-        <el-form-item label="备注：">
-          <el-input v-model="form.remark" type="textarea" style="max-width: 500px"></el-input>
-        </el-form-item>
         <el-form-item label="总报销金额：">
           <span class="money">{{ totalMoney }}</span> 元
         </el-form-item>
+        <el-form-item label="备注：">
+          <el-input v-model="form.remark" type="textarea" style="max-width: 500px"></el-input>
+        </el-form-item>
+
+        <el-divider></el-divider>
+
         <el-form-item label="审批人：">
           <el-select v-model="form.approve_user" filterable>
             <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
@@ -280,7 +283,7 @@ export default {
         pay_type: '银行转账',
         approve_user: null,
         payee: '',
-        bank_name: '招商银行',
+        bank_name: '',
         bank_account: '',
         bank_address: '',
         detailList: [
@@ -309,6 +312,7 @@ export default {
 
         payee: [{ required: true, message: '请输入收款单位', trigger: 'blur' }],
         bank_account: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }],
+        bank_name: [{ required: true, message: '请输入开户银行', trigger: 'blur' }],
         bank_address: [{ required: true, message: '请输入开户地址', trigger: 'blur' }]
       },
       // 发票号正则校验
