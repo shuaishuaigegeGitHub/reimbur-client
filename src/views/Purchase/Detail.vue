@@ -31,7 +31,7 @@
       </el-form-item>
 
       <div class="detail-body">
-        <div v-for="(item, index) in details" :key="index">
+        <div v-for="(item, index) in details" :key="index" class="detail-item">
           <h4 class="detail-header">采购明细({{ index + 1 }})</h4>
           <el-form-item label="物品名称：">
             {{ item.name }}
@@ -50,6 +50,9 @@
             <span class="money-color">{{ calTotalMoney(item.money, item.number) }}</span>
             元
           </el-form-item>
+          <div v-if="item.status == 1" class="detail-flag">
+            已报销
+          </div>
         </div>
       </div>
 
@@ -245,6 +248,23 @@ export default {
     .detail-header {
       background-color: #d7d8de;
       line-height: 2rem;
+    }
+
+    .detail-item {
+      position: relative;
+
+      .detail-flag {
+        position: absolute;
+        top: 30px;
+        right: 0;
+        border: 1px solid #78f778;
+        width: 60px;
+        line-height: 60px;
+        text-align: center;
+        border-radius: 50%;
+        transform: rotate(30deg);
+        color: #7ec13b;
+      }
     }
   }
 
