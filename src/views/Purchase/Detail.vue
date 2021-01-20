@@ -26,12 +26,12 @@
         </div>
       </el-form-item>
       <el-form-item label="总采购金额：">
-        <span class="money-color">{{ totalMoney | 1000 }}</span>
+        <span class="money-color">{{ Number(data.total_money) | 1000 }}</span>
         元
       </el-form-item>
 
       <div class="detail-body">
-        <div v-for="(item, index) in data.detail" :key="index">
+        <div v-for="(item, index) in details" :key="index">
           <h4 class="detail-header">采购明细({{ index + 1 }})</h4>
           <el-form-item label="物品名称：">
             {{ item.name }}
@@ -49,9 +49,6 @@
           <el-form-item label="总价格：">
             <span class="money-color">{{ calTotalMoney(item.money, item.number) }}</span>
             元
-          </el-form-item>
-          <el-form-item label="科目：">
-            <span>{{ getCascaderLabel(item.subject_id) }}</span>
           </el-form-item>
         </div>
       </div>
@@ -138,13 +135,6 @@ export default {
     // 已取消，已驳回的采购单可以基于该采购单重新开始采购
     reStart() {
       return this.myself && (this.data.status == 3 || this.data.status == 4);
-    },
-    totalMoney() {
-      return this.data.detail
-        .map(item => NP.round(NP.times(item.number, item.money), 2))
-        .reduce((prev, cur) => {
-          return NP.plus(prev, cur);
-        }, 0);
     }
   },
   data() {
@@ -152,9 +142,10 @@ export default {
       form: {
         remark: ''
       },
+      // 流程记录
       actList: [],
-      // 科目数据
-      subjectData: [],
+      // 明细数据
+      details: [],
 
       comment: {
         visible: false,
@@ -181,13 +172,14 @@ export default {
       if (this.data.id) {
         this.actList = [];
         const res = await this.$axios({
-          url: '/api/purchase/query-instance-process-status',
+          url: '/api/purchase/query-process-detail',
           method: 'GET',
           params: {
             id: this.data.id
           }
         });
-        this.actList = res.data;
+        this.actList = res.data.actList;
+        this.details = res.data.details;
       }
     },
     calTotalMoney(money, number) {
@@ -219,44 +211,6 @@ export default {
       this.$emit('close');
       this.$router.push({ path: '/purchase/edit/' + this.data.id });
     },
-    // 获取科目层级
-    getCascaderLabel(value) {
-      if (!value) {
-        return '';
-      }
-      const labels = [];
-      const matchCascaderData = function(list) {
-        list.forEach(item => {
-          if (item.id == value) {
-            labels.push(item.name);
-          } else if (value.startsWith(item.id)) {
-            labels.push(item.name);
-            matchCascaderData(item.children);
-          }
-        });
-      };
-      matchCascaderData(this.subjectData);
-      labels.shift();
-      return labels.join(' / ');
-    },
-    // 查询科目数
-    async querySubjectData() {
-      const res = await this.$axios({
-        url: '/api/reimbur/subject-tree',
-        methods: 'get'
-      });
-      function treeMap(item) {
-        let temp = {
-          id: item.id,
-          name: item.name,
-          parent_id: item.parent_id,
-          parent_str: item.parent_str,
-          children: item.children.length ? item.children.map(treeMap) : null
-        };
-        return temp;
-      }
-      this.subjectData = res.data.map(treeMap);
-    },
     async handleAddComment() {
       if (this.comment.form.remark === '') {
         return this.$message.warning('请填写评论');
@@ -277,7 +231,6 @@ export default {
   },
   mounted() {
     this.query();
-    this.querySubjectData();
   }
 };
 </script>

@@ -50,7 +50,7 @@
       <el-table-column label="最近一次操作时间" prop="updatetime" align="center" min-width="200px"></el-table-column>
       <el-table-column label="采购金额" align="center">
         <template slot-scope="{ row }">
-          {{ calTotlaMoney(row) | 1000 }}
+          {{ Number(row.total_money) | 1000 }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="300">
@@ -161,14 +161,6 @@ export default {
     // 一键报销
     handleReimbur(row) {
       this.$router.push({ path: '/reimbur/add?pid=' + row.id });
-    },
-    calTotlaMoney(row) {
-      let totalMoney = row.detail
-        .map(item => NP.round(NP.times(item.number, item.money), 2))
-        .reduce((prev, cur) => {
-          return NP.round(NP.plus(prev, cur), 2);
-        }, 0);
-      return totalMoney;
     }
   },
   activated() {

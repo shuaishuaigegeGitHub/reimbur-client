@@ -79,21 +79,6 @@
             <el-option v-for="item in unitList" :key="item.value" :label="item.label" :value="item.value"> </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所属科目：">
-          <el-cascader
-            style="width: 300px"
-            v-model="item.subject_id"
-            :options="subjectData"
-            clearable
-            filterable
-            :filter-method="subjectFilterMethod"
-            :props="{
-              label: 'name',
-              value: 'id',
-              emitPath: false
-            }"
-          ></el-cascader>
-        </el-form-item>
       </div>
 
       <div>
@@ -180,7 +165,6 @@ export default {
             number: 1,
             norm: '',
             unit: '',
-            subject_id: null,
             name: ''
           }
         ],
@@ -215,10 +199,16 @@ export default {
         {
           label: '包',
           value: '包'
+        },
+        {
+          label: '盒',
+          value: '盒'
+        },
+        {
+          label: '箱',
+          value: '箱'
         }
       ],
-      // 科目列表
-      subjectData: [],
       // 用户列表
       userList: [],
       upload: {
@@ -264,8 +254,7 @@ export default {
         money: 0,
         number: 1,
         norm: '',
-        unit: '',
-        subject_id: null
+        unit: ''
       });
     },
     // 删除明细
@@ -317,37 +306,6 @@ export default {
         }
       });
     },
-    // 查询科目树
-    querySubject() {
-      this.$axios({
-        url: '/api/reimbur/subject-tree',
-        methods: 'get'
-      }).then(res => {
-        function treeMap(item) {
-          let temp = {
-            id: item.id,
-            name: item.name,
-            parent_id: item.parent_id,
-            parent_str: item.parent_str,
-            children: item.children.length ? item.children.map(treeMap) : null
-          };
-          return temp;
-        }
-        let subjectData = res.data.find(item => item.id.startsWith('20'));
-        // 采购，报销只需要 ’管理费用‘ 和 ’固定资产‘ 两个大科目即可
-        this.subjectData = subjectData.children
-          .filter(item => item.id == '2002' || item.id == '2003' || item.id == '2008')
-          .map(treeMap);
-      });
-    },
-    subjectFilterMethod(node, keyword) {
-      let label = node.label;
-      if (label.includes(keyword)) {
-        return true;
-      }
-      let spell = label.spell('first', 'low');
-      return spell.includes(keyword);
-    },
     // 选择审批人事件
     handleSelectApprove(val) {
       const user = this.userList.find(item => item.id === val);
@@ -372,7 +330,6 @@ export default {
             number: 1,
             norm: '',
             unit: '',
-            subject_id: null,
             name: ''
           }
         ],
@@ -427,7 +384,6 @@ export default {
   },
   async mounted() {
     this.userList = await getAllUser();
-    this.querySubject();
   },
   activated() {
     this.loadLocalData();

@@ -51,7 +51,7 @@
       <el-table-column label="申请时间" prop="createtime" align="center"></el-table-column>
       <el-table-column label="采购金额" align="center">
         <template slot-scope="{ row }">
-          {{ calTotlaMoney(row) | 1000 }}
+          {{ Number(row.total_money) | 1000 }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
@@ -238,14 +238,6 @@ export default {
             }
           });
       });
-    },
-    calTotlaMoney(row) {
-      let totalMoney = row.detail
-        .map(item => NP.round(NP.times(item.number, item.money), 2))
-        .reduce((prev, cur) => {
-          return NP.round(NP.plus(prev, cur), 2);
-        }, 0);
-      return totalMoney;
     }
   },
   mounted() {
