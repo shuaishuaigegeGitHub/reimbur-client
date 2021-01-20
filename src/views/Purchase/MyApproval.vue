@@ -111,6 +111,22 @@
             <el-button style="width: 100%" type="primary" @click="handleThen">同 意</el-button>
           </el-col>
         </el-row>
+
+        <el-row v-if="drawer.data.status === 2" class="detail-footer" :gutter="30">
+          <el-col :span="24">
+            <el-input
+              v-model.trim="force.remark"
+              type="textarea"
+              resize="none"
+              rows="4"
+              placeholder="输入强制驳回意见"
+            ></el-input>
+          </el-col>
+
+          <el-col>
+            <el-button type="danger" style="width: 100%;" @click="handleForceReject">强 制 驳 回</el-button>
+          </el-col>
+        </el-row>
       </div>
     </el-drawer>
   </div>
@@ -127,7 +143,12 @@ export default {
   },
   data() {
     return {
+      // 审批操作
       form: {
+        remark: ''
+      },
+      // 强制驳回
+      force: {
         remark: ''
       },
       // 采购列表
@@ -154,7 +175,9 @@ export default {
   },
   computed: {
     purchaseHeight() {
-      return this.drawer.data.status === 1 ? 'calc(100vh - 260px)' : 'calc(100vh - 100px)';
+      return this.drawer.data.status === 1 || this.drawer.data.status === 2
+        ? 'calc(100vh - 260px)'
+        : 'calc(100vh - 100px)';
     }
   },
   methods: {
@@ -173,6 +196,30 @@ export default {
       });
       this.list = res.data.rows;
       this.count = res.data.count;
+    },
+    // 强制驳回
+    async handleForceReject() {
+      if (!this.force.remark) {
+        return this.$message.warning('请填写备注');
+      }
+      await this.$confirm('确定强制驳回该采购？', {
+        type: 'warning',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      });
+      await this.$axios({
+        url: '/api/purchase/force-reject',
+        method: 'POST',
+        data: {
+          id: this.drawer.data.task_id,
+          remark: this.force.remark
+        }
+      });
+      this.$refs.purchaseDetail.query();
+      this.query();
+      this.$message.success('操作成功');
+      this.drawer.visible = false;
+      this.force.remark = '';
     },
     // 驳回
     handleReject() {
