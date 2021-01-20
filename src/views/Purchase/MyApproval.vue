@@ -39,13 +39,17 @@
       <el-table-column label="期望交付日期" prop="date" align="center"></el-table-column>
       <el-table-column label="状态" prop="status" align="center">
         <template slot-scope="{ row }">
-          <el-tag v-if="row.status === 1">
-            {{ row.refext ? '已转账' : '待我审批' }}
-          </el-tag>
+          <el-tag v-if="row.status === 1">待我审批</el-tag>
           <el-tag v-else-if="row.status === 2" type="success">已结束</el-tag>
           <el-tag v-else-if="row.status === 3" type="info">已取消</el-tag>
           <el-tag v-else-if="row.status === 4" type="danger">已驳回</el-tag>
           <el-tag v-else>未知状态</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="报销状态" prop="status" align="center">
+        <template slot-scope="{ row }">
+          <el-tag type="success" v-if="row.status === 2 && row.reimbur">已报销</el-tag>
+          <el-tag v-else>未报销</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="申请时间" prop="createtime" align="center"></el-table-column>
@@ -112,7 +116,7 @@
           </el-col>
         </el-row>
 
-        <el-row v-if="drawer.data.status === 2" class="detail-footer" :gutter="30">
+        <el-row v-if="drawer.data.status === 2 && !drawer.data.reimbur" class="detail-footer" :gutter="30">
           <el-col :span="24">
             <el-input
               v-model.trim="force.remark"
@@ -175,7 +179,7 @@ export default {
   },
   computed: {
     purchaseHeight() {
-      return this.drawer.data.status === 1 || this.drawer.data.status === 2
+      return this.drawer.data.status === 1 || (this.drawer.data.status === 2 && !this.drawer.data.reimbur)
         ? 'calc(100vh - 260px)'
         : 'calc(100vh - 100px)';
     }

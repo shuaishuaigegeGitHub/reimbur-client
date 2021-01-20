@@ -45,6 +45,13 @@
           <el-tag v-else>未知状态</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="报销状态" prop="status" align="center">
+        <template slot-scope="{ row }">
+          <el-tag type="success" v-if="row.reimbur === 2">全部报销</el-tag>
+          <el-tag type="primary" v-else-if="row.reimbur === 1">部分报销</el-tag>
+          <el-tag v-else type="info">未报销</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="申请时间" prop="createtime" align="center" min-width="200px"></el-table-column>
       <el-table-column label="最近一次操作人" prop="update_by" align="center" min-width="150px"></el-table-column>
       <el-table-column label="最近一次操作时间" prop="updatetime" align="center" min-width="200px"></el-table-column>
@@ -57,7 +64,9 @@
         <template slot-scope="{ row }">
           <el-button type="primary" size="small" @click="handleShow(row)">查看</el-button>
           <el-button type="danger" size="small" @click="handleCancel(row)" v-if="row.status == 1">取消</el-button>
-          <el-button type="success" size="small" @click="handleReimbur(row)" v-if="row.status == 2">报销</el-button>
+          <el-button type="success" size="small" @click="handleReimbur(row)" v-if="row.status == 2 && row.reimbur < 2"
+            >报销</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
