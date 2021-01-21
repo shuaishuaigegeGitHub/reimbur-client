@@ -25,6 +25,14 @@
         {{ data.flow_params.remark }}
       </el-form-item>
 
+      <div class="bank">
+        <h3 class="bank-title">打款信息</h3>
+        <el-form-item label="打款单位：">{{ data.flow_params.payee }}</el-form-item>
+        <el-form-item label="银行卡号：">{{ data.flow_params.bank_account }}</el-form-item>
+        <el-form-item label="开户行：">{{ data.flow_params.bank_name }}</el-form-item>
+        <el-form-item label="开户地：">{{ data.flow_params.bank_address }}</el-form-item>
+      </div>
+
       <div class="detail-body">
         <div v-for="(item, index) in data.flow_params.detailList" :key="index">
           <h4 class="detail-header">报销明细({{ index + 1 }})</h4>
@@ -342,6 +350,13 @@ export default {
   .detail-footer {
     .el-col {
       margin-top: 20px;
+    }
+  }
+
+  .bank {
+    .bank-title {
+      margin-top: 10px;
+      background-color: #f9d075;
     }
   }
 
