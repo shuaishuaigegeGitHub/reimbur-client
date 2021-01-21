@@ -513,6 +513,7 @@ export default {
         this.form.b_user_id = res.data.b_user_id;
         this.form.b_dept_id = res.data.b_dept_id;
         this.form.payee = res.data.payee;
+        this.form.bank_name = res.data.bank_name;
         this.form.bank_account = res.data.bank_account;
         this.form.bank_address = res.data.bank_address;
       }
