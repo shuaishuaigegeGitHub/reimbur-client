@@ -124,16 +124,14 @@ export default {
           return {
             name: item.name,
             money: this.moneySplit(this.calMoney(item)),
-            money_value: this.calMoney(item),
-            subjectName: this.findSubjectName(item.subject_id)
+            money_value: this.calMoney(item)
           };
         });
 
         while (temp.length < MAX_SIZE) {
           temp.push({
             name: '',
-            money: Array(8).fill(''),
-            subjectName: ''
+            money: Array(8).fill('')
           });
         }
 
