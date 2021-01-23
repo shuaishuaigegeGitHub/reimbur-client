@@ -101,7 +101,11 @@
               type="textarea"
               resize="none"
               rows="4"
-              placeholder="输入同意或者驳回信息，例如：同意；或者：已转账；或者：发票号不正确。"
+              :placeholder="
+                drawer.data.node_id == 'stage-transfer'
+                  ? '输入打款银行摘要例如：报销款'
+                  : '输入同意或者驳回信息，例如：同意；或者：发票号不正确。'
+              "
             ></el-input>
           </el-col>
 
