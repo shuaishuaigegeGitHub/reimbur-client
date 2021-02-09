@@ -4,26 +4,26 @@
       <h2 align="center">报销</h2>
       <div class="pdf-header">
         <span class="company">厦门风领科技有限公司</span>
-        <span class="apply-date">申请日期：{{ form.flow_params.a_date }}</span>
+        <span class="apply-date">申请日期：{{ form.date }}</span>
       </div>
       <table border="1">
         <tbody>
-          <tr>
+          <!-- <tr>
             <td class="label">审批编码</td>
             <td colspan="4">{{ form.id }}</td>
-          </tr>
+          </tr> -->
           <tr>
             <td class="label">申请人</td>
-            <td colspan="4">{{ form.flow_params.b_user_name }}</td>
+            <td colspan="4">{{ form.applicant_name }}</td>
           </tr>
           <tr>
             <td class="label">申请人部门</td>
-            <td colspan="4">{{ form.flow_params.b_dept_name }}</td>
+            <td colspan="4">{{ form.applicant_dept_name }}</td>
           </tr>
-          <!-- <tr>
-            <td class="label">申请事由</td>
-            <td colspan="4">公司内网搭建、网络部署</td>
-          </tr> -->
+          <tr>
+            <td class="label">报销事由</td>
+            <td colspan="4">{{ form.reason }}</td>
+          </tr>
           <tr>
             <td class="label"></td>
             <td>名称</td>
@@ -31,7 +31,7 @@
             <td>单位</td>
             <td>价格</td>
           </tr>
-          <tr v-for="(item, index) in form.flow_params.detailList" :key="index + item.name">
+          <tr v-for="(item, index) in form.detailList" :key="index + item.name">
             <td class="label">报销明细{{ index + 1 }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.number }}</td>
@@ -40,10 +40,10 @@
           </tr>
           <tr>
             <td class="label">支付方式</td>
-            <td colspan="4">{{ form.flow_params.pay_type }}</td>
+            <td colspan="4">{{ form.pay_type == 1 ? '银行转账' : '' }}</td>
           </tr>
-          <tr v-for="(item, index) in fillActList" :key="index">
-            <td v-if="index == 0" class="label" :rowspan="fillActList.length + 1">审批流程</td>
+          <tr v-for="(item, index) in fillprocessList" :key="index">
+            <td v-if="index == 0" class="label" :rowspan="fillprocessList.length + 1">审批流程</td>
             <td colspan="4" style="height: 24px">
               <div class="process-wrap">
                 <div class="content">
@@ -78,7 +78,7 @@ import { watermarkIt } from 'easy-watermark';
 export default {
   props: {
     form: Object,
-    actList: Array
+    processList: Array
   },
   data() {
     return {
@@ -91,8 +91,9 @@ export default {
     }
   },
   computed: {
-    fillActList: function() {
-      let temp = this.actList || [];
+    fillprocessList: function() {
+      let temp = this.processList || [];
+      temp = temp.filter(item => item.flag > 1);
       let result = [];
       for (let act of temp) {
         result.push(act);
@@ -113,7 +114,7 @@ export default {
     drawWatermark() {
       watermarkIt({
         el: '.baoxiao-pdf-preview',
-        text: this.form.flow_params.b_user_name,
+        text: this.form.applicant_name,
         color: 'rgba(0, 0, 0, .2)'
       });
     }

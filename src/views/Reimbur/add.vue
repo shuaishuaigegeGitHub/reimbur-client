@@ -7,7 +7,7 @@
         <ul>
           <li>1、已有发票，付款类型为正常请款，否则，付款类型为预付请款</li>
           <li>
-            2、发票号最长8个字符，只能由大写字母数字组成；多个发票号请用中文逗号隔开，这里直接复制，格式如下：12345678，A1234567
+            2、发票号最长8个字符，只能由大写字母数字组成；多个发票号请用逗号隔开，这里直接复制，格式如下：12345678,A1234567
           </li>
           <li>3、<span style="color: red">如果不知道科目怎么选择，就放空</span></li>
           <li>4、银行卡号，开户银行请正确填写，一经转账，无法修改</li>
@@ -29,43 +29,24 @@ export default {
     // 提交事件
     async handleSubmit(form) {
       this.$axios({
-        url: '/api/reimbur/add',
+        url: '/api/reimbur/submit',
         method: 'POST',
         data: form
       }).then(res => {
         this.$notify.success('报销申请提交成功');
         this.$refs.baoXiaoForm.resetDetailList();
-        sessionStorage.removeItem('reimbur:add');
+        // sessionStorage.removeItem('reimbur:add');
         this.$router.push({ path: '/reimbur/index' });
       });
     },
     async queryInstance() {
-      if (this.$route.query.oid) {
-        const res = await this.$axios({
-          url: '/api/reimbur/instance/' + this.$route.query.oid
-        });
-        if (res.data) {
-          // 有数据
-          this.$refs.baoXiaoForm.setForm(res.data);
-        }
-      } else if (this.$route.query.pid) {
+      if (this.$route.query.pid) {
         const res = await this.$axios({
           url: '/api/purchase/reimbur/' + this.$route.query.pid
         });
         if (res.data) {
           // 有数据
-          this.$refs.baoXiaoForm.setForm(res.data, true);
-        }
-      }
-
-      if (!this.$route.query.oid) {
-        // 说明需要查询一下最近的抄送人列表数据了
-        const res = await this.$axios({
-          url: '/api/reimbur/last-copy'
-        });
-        if (res.data) {
-          // 有数据
-          this.$refs.baoXiaoForm.setCopys(res.data);
+          this.$refs.baoXiaoForm.setForm(res.data);
         }
       }
     }

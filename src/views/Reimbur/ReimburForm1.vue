@@ -15,7 +15,7 @@
 
         <div class="form-subtitle">
           <div class="dept">
-            部门<span class="dept-input text--black" align="center">{{ form.flow_params.b_dept_name }}</span>
+            部门<span class="dept-input text--black" align="center">{{ form.create_dept_name }}</span>
           </div>
           <div class="date">
             报销日期：
@@ -98,40 +98,41 @@
 
 <script>
 import Print from '@/utils/print';
-import pdfjs from '@/utils/pdf';
 import NP from 'number-precision';
 import numberUitl from 'num2capital';
 
 export default {
   props: {
-    form: Object,
-    actList: Array
+    form: Object
   },
   data() {
     return {
       print: {},
-      subjectData: []
+      subjectData: [],
+      detailList: []
     };
   },
   computed: {
     formList() {
       let result = [];
       const MAX_SIZE = 6;
-      const detailList = [...this.form.flow_params.detailList];
       let temp = null;
+      const detailList = Object.assign([], this.form.detailList);
       while (detailList.length) {
         temp = detailList.splice(0, MAX_SIZE).map(item => {
           return {
             name: item.name,
             money: this.moneySplit(this.calMoney(item)),
-            money_value: this.calMoney(item)
+            money_value: this.calMoney(item),
+            subjectName: this.findSubjectName(item.subject_id)
           };
         });
 
         while (temp.length < MAX_SIZE) {
           temp.push({
             name: '',
-            money: Array(8).fill('')
+            money: Array(8).fill(''),
+            subjectName: ''
           });
         }
 
@@ -140,7 +141,7 @@ export default {
       return result;
     },
     time: function() {
-      return this.form.flow_params.b_date.split('-');
+      return this.form.date.split('-');
     }
   },
   methods: {
@@ -181,7 +182,9 @@ export default {
         }, 0);
     },
     findSubjectName(subjectId) {
-      let result = '';
+      if (!subjectId) {
+        return '';
+      }
       function queryName(subjectArr) {
         for (let subject of subjectArr) {
           if (subject.id === subjectId) {

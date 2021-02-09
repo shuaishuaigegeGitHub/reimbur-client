@@ -5,51 +5,41 @@
       <el-divider></el-divider>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="填单人：" prop="a_user_id">
-            <el-select v-model="form.a_user_id" disabled filterable>
+          <el-form-item label="填单人：" prop="create_id">
+            <el-select v-model="form.create_id" disabled filterable>
               <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="部门：" prop="a_dept_id">
-            <el-select v-model="form.a_dept_id" disabled placeholder="填单人所在部门">
+          <el-form-item label="部门：" prop="create_dept_id">
+            <el-select v-model="form.create_dept_id" disabled placeholder="填单人所在部门">
               <el-option v-for="item in deptList" :key="item.id" :label="item.dept_name" :value="item.id"></el-option>
             </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="日期：" prop="a_date" label-width="70px">
-            <el-date-picker
-              style="width: 140px"
-              v-model="form.a_date"
-              type="date"
-              value-format="yyyy-MM-dd"
-            ></el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-form-item label="申请人：" prop="b_user_id">
-            <el-select v-model="form.b_user_id" :disabled="edit" filterable @change="handleChange">
+          <el-form-item label="申请人：" prop="applicant">
+            <el-select v-model="form.applicant" :disabled="edit" filterable @change="handleChange">
               <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="部门：" prop="b_dept_id">
-            <el-select v-model="form.b_dept_id" :disabled="edit" placeholder="申请人所在部门">
+          <el-form-item label="部门：" prop="applicant_dept">
+            <el-select v-model="form.applicant_dept" :disabled="edit" placeholder="申请人所在部门">
               <el-option v-for="item in deptList" :key="item.id" :label="item.dept_name" :value="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="日期：" prop="b_date" label-width="70px">
+          <el-form-item label="日期：" prop="date" label-width="70px">
             <el-date-picker
               style="width: 140px"
-              v-model="form.b_date"
+              v-model="form.date"
               type="date"
               value-format="yyyy-MM-dd"
             ></el-date-picker>
@@ -61,14 +51,24 @@
         <el-col :span="8">
           <el-form-item label="申请类型：">
             <el-select v-model="form.apply_type">
-              <el-option v-for="item in applyTypeList" :key="item" :label="item" :value="item"></el-option>
+              <el-option
+                v-for="item in applyTypeList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="付款方式：">
             <el-select v-model="form.pay_type">
-              <el-option v-for="item in payTypeList" :key="item" :label="item" :value="item"></el-option>
+              <el-option
+                v-for="item in payTypeList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -105,7 +105,7 @@
           <el-input
             v-model.trim="form.bank_address"
             style="max-width: 500px"
-            placeholder="银行卡号不是招商银行的需要提供开户地址，例如：福建省厦门市"
+            placeholder="例如：福建省厦门市"
           ></el-input>
         </el-form-item>
       </el-row>
@@ -176,7 +176,7 @@
         </el-form-item>
       </div>
 
-      <div>
+      <div v-if="!form.p_id">
         <el-button type="primary" icon="el-icon-plus" plain style="margin-left: 100px" @click="addDetail"
           >添加报销明细</el-button
         >
@@ -185,32 +185,19 @@
       <el-divider></el-divider>
 
       <div>
+        <el-form-item label="报销事由：" prop="reason">
+          <el-input v-model="form.reason" type="textarea" style="max-width: 500px"></el-input>
+        </el-form-item>
         <el-form-item label="总报销金额：">
           <span class="money">{{ totalMoney }}</span> 元
-        </el-form-item>
-        <el-form-item label="备注：">
-          <el-input v-model="form.remark" type="textarea" style="max-width: 500px"></el-input>
         </el-form-item>
 
         <el-divider></el-divider>
 
         <el-form-item label="审批人：">
-          <el-select v-model="form.approve_user" filterable>
+          <el-select v-model="form.approve_user" filterable :disabled="edit">
             <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="抄送人：">
-          <div class="approve-wrap">
-            <div v-for="(item, index) in form.copys" :key="'copy-' + item.id" class="approve-item">
-              <el-avatar shape="square" size="large" :src="item.avatar">{{ item.user_name.slice(0, 1) }}</el-avatar>
-              <span>{{ item.user_name }}</span>
-              <i class="el-icon-plus"></i>
-              <span class="fl-close" @click="handleDelCopy(index)">x</span>
-            </div>
-            <el-select v-model="copyUser" @change="handleSelectCopy" filterable placeholder="请选择抄送人">
-              <el-option v-for="item in copyList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
-            </el-select>
-          </div>
         </el-form-item>
       </div>
 
@@ -249,8 +236,24 @@ export default {
       userList: [],
       // 部门列表
       deptList: [],
-      applyTypeList: ['正常请款', '预付请款'],
-      payTypeList: ['银行转账'],
+      // 申请类型
+      applyTypeList: [
+        {
+          label: '正常请款',
+          value: 1
+        },
+        {
+          label: '预付请款',
+          value: 2
+        }
+      ],
+      // 付款方式
+      payTypeList: [
+        {
+          label: '银行转账',
+          value: 1
+        }
+      ],
       // 单位列表
       unitList: [
         {
@@ -273,14 +276,13 @@ export default {
       // 科目列表
       subjectData: [],
       form: {
-        a_user_id: null,
-        a_dept_id: null,
-        a_date: dayjs().format('YYYY-MM-DD'),
-        b_user_id: null,
-        b_dept_id: null,
-        b_date: dayjs().format('YYYY-MM-DD'),
-        apply_type: '正常请款',
-        pay_type: '银行转账',
+        create_id: null,
+        create_dept_id: null,
+        applicant: null,
+        applicant_dept: null,
+        date: dayjs().format('YYYY-MM-DD'),
+        apply_type: 1,
+        pay_type: 1,
         approve_user: null,
         payee: '',
         bank_name: '',
@@ -297,23 +299,21 @@ export default {
             receipt_number: ''
           }
         ],
-        // 抄送人列表
-        copys: [],
-        remark: ''
+        reason: ''
       },
       rules: {
-        a_user_id: [{ required: true, message: '请选择填单人', trigger: 'blur' }],
-        a_dept_id: [{ required: true, message: '请选择部门', trigger: 'blur' }],
-        a_date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
+        create_id: [{ required: true, message: '请选择填单人', trigger: 'blur' }],
+        create_dept_id: [{ required: true, message: '请选择部门', trigger: 'blur' }],
 
-        b_user_id: [{ required: true, message: '请选择申请人', trigger: 'blur' }],
-        b_dept_id: [{ required: true, message: '请选择部门', trigger: 'blur' }],
-        b_date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
+        applicant: [{ required: true, message: '请选择申请人', trigger: 'blur' }],
+        applicant_dept: [{ required: true, message: '请选择部门', trigger: 'blur' }],
+        date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
 
         payee: [{ required: true, message: '请输入收款单位', trigger: 'blur' }],
         bank_account: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }],
         bank_name: [{ required: true, message: '请输入开户银行', trigger: 'blur' }],
-        bank_address: [{ required: true, message: '请输入开户地址', trigger: 'blur' }]
+        bank_address: [{ required: true, message: '请输入开户地址', trigger: 'blur' }],
+        reason: [{ required: true, message: '请输入开户地址', trigger: 'blur' }]
       },
       // 发票号正则校验
       receipt_number_regex: /[A-Z0-9]{6,8}/,
@@ -333,12 +333,6 @@ export default {
         .reduce((prev, cur) => {
           return NP.plus(prev, cur);
         }, 0);
-    },
-    // 抄送人列表
-    copyList() {
-      return this.userList.filter(item => {
-        return !this.form.copys.find(approve => approve.id == item.id);
-      });
     }
   },
   methods: {
@@ -396,6 +390,8 @@ export default {
           remark: ''
         }
       ];
+      this.form.reason = '';
+      this.form.p_id = null;
     },
     delDetail(index) {
       this.form.detailList.splice(index, 1);
@@ -423,7 +419,7 @@ export default {
         this.$message.warning('请输入报销明细的物品名称');
         return false;
       }
-      if (this.form.apply_type === '正常请款') {
+      if (this.form.apply_type === 1) {
         // 正常请款都需要发票号，校验发票号是否有问题
         if (!detail.receipt_number) {
           this.$message.warning('正常请款需要填写发票号');
@@ -453,28 +449,23 @@ export default {
               return false;
             }
           }
-          let user = this.userList.find(item => item.id === this.form.a_user_id);
-          // 填单人名字
-          this.form.a_user_name = user.user_name;
-          let dept = this.deptList.find(item => item.id === this.form.a_dept_id);
+          let user = this.userList.find(item => item.id === this.form.create_id);
+          let dept = this.deptList.find(item => item.id === this.form.create_dept_id);
           // 填单人部门
-          this.form.a_dept_name = dept.dept_name;
+          this.form.create_dept_name = dept.dept_name;
 
-          user = this.userList.find(item => item.id === this.form.b_user_id);
+          user = this.userList.find(item => item.id === this.form.applicant);
           // 申请人名字
-          this.form.b_user_name = user.user_name;
-          dept = this.deptList.find(item => item.id === this.form.b_dept_id);
+          this.form.applicant_name = user.user_name;
+          dept = this.deptList.find(item => item.id === this.form.applicant_dept);
           // 申请人部门
-          this.form.b_dept_name = dept.dept_name;
+          this.form.applicant_dept_name = dept.dept_name;
 
           user = this.userList.find(item => item.id === this.form.approve_user);
           // 审批人名字
           this.form.approve_user_name = user.user_name;
 
-          // 报销总金额
-          this.form.total_money = this.totalMoney;
-
-          if (this.form.total_money > this.maxMoney) {
+          if (this.totalMoney > this.maxMoney) {
             // 报销总金额不能大于 999999.99
             return this.$message.warning(`报销金额不能大于 ￥${this.maxMoney}`);
           }
@@ -486,32 +477,25 @@ export default {
         }
       });
     },
-    async setForm(form, b) {
+    setForm(form) {
       this.form = form;
-      if (b) {
-        await this.handleChange(form.b_user_id);
-        this.fillAUserId();
-      }
-      sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
-    },
-    setCopys(copys) {
-      if (!this.form.copys || !this.form.copys.length) {
-        this.form.copys = copys;
-        sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
-      }
+      this.fillAUserId();
+      // sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
     },
     // 申请人切换
     async handleChange(val) {
-      const user = this.userList.find(item => item.id === val);
-      const dept = this.deptList.find(item => user.dept_id_list.includes(item.id + ''));
-      this.form.b_dept_id = dept.id;
+      // const user = this.userList.find(item => item.id === val);
+      // const dept = this.deptList.find(item => user.dept_id_list.includes(item.id + ''));
+      // this.form.applicant_dept = dept.id;
       const res = await this.$axios({
-        url: '/api/reimbur/base-data/' + val
+        url: '/api/reimbur/base-data',
+        params: {
+          userid: val
+        }
       });
       if (res.data) {
         // 填充报销基本信息
-        this.form.b_user_id = res.data.b_user_id;
-        this.form.b_dept_id = res.data.b_dept_id;
+        this.form.applicant_dept = res.data.applicant_dept;
         this.form.payee = res.data.payee;
         this.form.bank_name = res.data.bank_name;
         this.form.bank_account = res.data.bank_account;
@@ -520,41 +504,11 @@ export default {
     },
     fillAUserId() {
       if (this.$store.state.user.user) {
-        this.form.a_user_id = this.$store.state.user.user.uid;
-        const user = this.userList.find(item => item.id === this.form.a_user_id);
+        this.form.create_id = this.$store.state.user.user.uid;
+        const user = this.userList.find(item => item.id === this.form.create_id);
         const dept = this.deptList.find(item => user.dept_id_list.includes(item.id + ''));
-        this.form.a_dept_id = dept.id;
-        sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
+        this.form.create_dept_id = dept.id;
       }
-    },
-    // 加载本地缓存
-    loadLocalData() {
-      setTimeout(() => {
-        if (!this.edit) {
-          let str = sessionStorage.getItem('reimbur:add');
-          if (str) {
-            this.form = JSON.parse(str);
-          }
-
-          this.timer = setInterval(() => {
-            sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
-          }, 3000);
-        }
-      }, 1200);
-    },
-    // 删除抄送人
-    handleDelCopy(index) {
-      this.form.copys.splice(index, 1);
-    },
-    // 选择抄送人事件
-    handleSelectCopy(val) {
-      const user = this.userList.find(item => item.id === val);
-      if (this.form.copys) {
-        this.form.copys.push(user);
-      } else {
-        this.form.copys = [user];
-      }
-      this.copyUser = null;
     }
   },
   async mounted() {
@@ -564,16 +518,16 @@ export default {
     setTimeout(() => {
       this.fillAUserId();
     }, 800);
-  },
-  activated() {
-    this.loadLocalData();
-  },
-  deactivated() {
-    if (this.timer) {
-      clearInterval(this.timer);
-      this.timer = null;
-    }
   }
+  // activated() {
+  //   this.loadLocalData();
+  // },
+  // deactivated() {
+  //   if (this.timer) {
+  //     clearInterval(this.timer);
+  //     this.timer = null;
+  //   }
+  // }
 };
 </script>
 

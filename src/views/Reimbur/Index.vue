@@ -8,9 +8,9 @@
         <div slot="label">我的审批<el-badge class="mark" :value="count" type="primary" /></div>
         <MyApproval></MyApproval>
       </el-tab-pane>
-      <el-tab-pane label="抄送给我" name="three">
+      <!-- <el-tab-pane label="抄送给我" name="three">
         <MyCopy></MyCopy>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -18,15 +18,15 @@
 <script>
 import MyReimbursement from './MyReimbursement';
 import MyApproval from './MyApproval';
-import MyCopy from './MyCopy';
+// import MyCopy from './MyCopy';
 import Bus from '@/utils/bus';
 
 export default {
   name: 'Reimbur',
   components: {
     MyReimbursement,
-    MyApproval,
-    MyCopy
+    MyApproval
+    // MyCopy
   },
   data() {
     return {

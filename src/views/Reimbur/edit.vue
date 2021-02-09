@@ -1,13 +1,13 @@
 <template>
   <div class="main">
-    <bao-xiao-form :model="data.flow_params" class="bao-xiao-form" @submit="handleSubmit"></bao-xiao-form>
+    <bao-xiao-form :model="data" class="bao-xiao-form" @submit="handleSubmit"></bao-xiao-form>
     <div class="descriptor">
       <div class="descriptor-content">
         <b>说明：</b>
         <ul>
           <li>1、已有发票，付款类型为正常请款，否则，付款类型为预付请款</li>
           <li>
-            2、发票号最长8个字符，只能由大写字母数字组成；多个发票号请用中文逗号隔开，这里直接复制，格式如下：12345678，A1234567
+            2、发票号最长8个字符，只能由大写字母数字组成；多个发票号请用中文逗号隔开，这里直接复制，格式如下：12345678,A1234567
           </li>
           <li>3、<span style="color: red">如果不知道科目怎么选择，就放空</span></li>
           <li>4、银行卡号，开户银行请正确填写，一经转账，无法修改</li>
@@ -54,14 +54,10 @@ export default {
     },
     // 提交事件
     async handleSubmit(form) {
-      let data = {
-        id: this.data.id,
-        flow_params: form
-      };
       await this.$axios({
         url: '/api/reimbur/edit',
         method: 'POST',
-        data: data
+        data: form
       });
 
       this.$message.success('修改成功');
