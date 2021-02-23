@@ -58,6 +58,7 @@
           {{ Number(row.total_money) | 1000 }}
         </template>
       </el-table-column>
+      <el-table-column label="申请事由" prop="reasons" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="{ row }">
           <el-button v-if="row.status == 1 && !row.refext" type="primary" size="small" @click="handleShow(row)">
