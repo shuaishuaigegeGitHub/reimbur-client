@@ -35,7 +35,11 @@
     </el-row>
     <el-table :data="list" border>
       <el-table-column label="申请人" prop="applicant_name" align="center"></el-table-column>
-      <el-table-column label="付款类型" prop="apply_type" align="center"></el-table-column>
+      <el-table-column label="付款类型" prop="apply_type" align="center">
+        <template slot-scope="{ row }">
+          {{ row.apply_type == 1 ? '正常请款' : '预付请款' }}
+        </template>
+      </el-table-column>
       <el-table-column label="任务状态" prop="task_status" align="center">
         <template slot-scope="{ row }">
           <el-tag v-if="row.task_status === 1">
@@ -138,8 +142,8 @@
       <ReimburForm2 v-show="print.type == 2" :form="print.data" :processList="print.processList"></ReimburForm2>
     </el-dialog>
 
-    <el-dialog :visible.sync="transfer.visible" title="转账" width="600px" :close-on-click-modal="false">
-      <el-form label-width="100px">
+    <el-dialog :visible.sync="transfer.visible" title="转账" width="850px" :close-on-click-modal="false">
+      <el-form label-width="100px" :model="transfer" ref="transferForm" :rules="transferRules">
         <el-form-item label="打款单位：">{{ drawer.data.payee }}</el-form-item>
         <el-form-item label="银行卡号：">{{ drawer.data.bank_account }}</el-form-item>
         <el-form-item label="开户行：">{{ drawer.data.bank_name }}</el-form-item>
@@ -147,8 +151,46 @@
         <el-form-item label="打款金额："
           ><span style="color: red">￥{{ Number(drawer.data.total_money) | 1000 }}</span></el-form-item
         >
-        <el-form-item label="银行摘要：">
-          <el-input v-model="transfer.remark" type="textarea" placeholder="例如：报销款"></el-input>
+        <el-form-item label="银行摘要：" prop="remark">
+          <el-input
+            v-model="transfer.remark"
+            type="textarea"
+            placeholder="使用线上打款时，作为打款的银行摘要，例如：报销款"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="打款账户：" prop="bank_id">
+          <div class="bank-wrap">
+            <div
+              class="bank-item"
+              v-for="item in bankList"
+              :key="item.bank_account"
+              :class="item.bank_account == transfer.bank_account ? 'active' : ''"
+              @click="transfer.bank_account = item.bank_account"
+            >
+              <p class="bank-name">{{ item.bank_name }}</p>
+              <p class="bank-account">{{ item.bank_account }}</p>
+              <div align="right">
+                <el-tooltip
+                  v-if="item.online_pay"
+                  class="item"
+                  effect="dark"
+                  content="使用报销系统打款，这里转账后等待银行到账，自动完成该报销"
+                  placement="top"
+                >
+                  <span class="bank-flag bank-flag-green">线上打款</span>
+                </el-tooltip>
+                <el-tooltip
+                  v-else
+                  class="item"
+                  effect="dark"
+                  content="出纳线下打款，这里转账后直接完成该报销"
+                  placement="top"
+                >
+                  <span class="bank-flag">线下打款</span>
+                </el-tooltip>
+              </div>
+            </div>
+          </div>
         </el-form-item>
       </el-form>
       <div align="right" slot="footer">
@@ -193,6 +235,8 @@ export default {
         { label: '已取消', value: 3 },
         { label: '已驳回', value: 4 }
       ],
+      // 银行列表
+      bankList: [],
       drawer: {
         visible: false,
         data: {},
@@ -211,7 +255,12 @@ export default {
       // 转账弹框
       transfer: {
         visible: false,
-        remark: ''
+        remark: '',
+        bank_account: null
+      },
+      transferRules: {
+        remark: [{ required: true, message: '请填写银行摘要', trigger: 'blur' }],
+        bank_account: [{ required: true, message: '请选择打款账户', trigger: 'blur' }]
       }
     };
   },
@@ -234,6 +283,13 @@ export default {
       this.drawer.visible = true;
       this.drawer.data = row;
       this.queryProcessDetail();
+    },
+    // 查询银行列表
+    async queryBankList() {
+      const res = await this.$axios({
+        url: '/api/reimbur/bank-list'
+      });
+      this.bankList = res.data;
     },
     // 查看明细和流程
     async queryProcessDetail() {
@@ -342,31 +398,35 @@ export default {
     },
     // 转账
     handleTransfer() {
-      if (!this.transfer.remark) {
-        return this.$message.warning('请填写银行转账摘要');
-      }
-      this.$confirm(
-        `向【${this.drawer.data.payee}(${this.drawer.data.bank_account})】转账 ￥${this.drawer.data.total_money}`,
-        {
-          type: 'warning',
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
+      this.$refs.transferForm.validate(valid => {
+        if (!valid) {
+          return false;
         }
-      ).then(() => {
-        this.$axios({
-          url: '/api/reimbur/transfer',
-          method: 'POST',
-          data: {
-            task_id: this.drawer.data.task_id,
-            remark: this.transfer.remark,
-            updatetime: this.drawer.data.updatetime
+
+        this.$confirm(
+          `使用打款账户【${this.transfer.bank_account}】向【${this.drawer.data.payee}(${this.drawer.data.bank_account})】转账 ￥${this.drawer.data.total_money}`,
+          {
+            type: 'warning',
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
           }
-        }).then(res => {
-          this.$message.success('操作成功');
-          this.transfer.visible = false;
-          this.drawer.visible = false;
-          this.query();
-          this.queryProcessDetail();
+        ).then(() => {
+          this.$axios({
+            url: '/api/reimbur/transfer',
+            method: 'POST',
+            data: {
+              task_id: this.drawer.data.task_id,
+              remark: this.transfer.remark,
+              bank_account: this.transfer.bank_account,
+              updatetime: this.drawer.data.updatetime
+            }
+          }).then(res => {
+            this.$message.success('操作成功');
+            this.transfer.visible = false;
+            this.drawer.visible = false;
+            this.query();
+            this.queryProcessDetail();
+          });
         });
       });
     },
@@ -386,6 +446,7 @@ export default {
   },
   mounted() {
     this.query();
+    this.queryBankList();
   }
 };
 </script>
@@ -404,6 +465,44 @@ export default {
     .el-col {
       margin-top: 20px;
     }
+  }
+}
+
+.bank-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .bank-item {
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    flex-basis: 220px;
+    flex-grow: 0;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    .bank-name,
+    .bank-account {
+      margin-left: 10px;
+    }
+
+    .bank-flag {
+      margin-right: 10px;
+      border-radius: 2px;
+      padding: 1px 3px;
+    }
+    .bank-flag-green {
+      background-color: #aaffd8;
+      border: 1px solid #08da7a;
+    }
+  }
+
+  .bank-item:hover {
+    background-color: aliceblue;
+  }
+
+  .active {
+    background-color: aliceblue;
   }
 }
 </style>

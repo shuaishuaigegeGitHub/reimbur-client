@@ -26,9 +26,13 @@
     </el-row>
     <el-table :data="list" border>
       <el-table-column label="申请人" prop="applicant_name" align="center"></el-table-column>
-      <el-table-column label="付款类型" prop="apply_type" align="center"></el-table-column>
-      <el-table-column label="申请时间" prop="createtime" align="center"></el-table-column>
-      <el-table-column label="结束时间" prop="updatetime" align="center"></el-table-column>
+      <el-table-column label="付款类型" prop="apply_type" align="center">
+        <template slot-scope="{ row }">
+          {{ row.apply_type == 1 ? '正常请款' : '预付请款' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="申请时间" prop="createtime" align="center" :formatter="timeFormatter"></el-table-column>
+      <el-table-column label="结束时间" prop="updatetime" align="center" :formatter="timeFormatter"></el-table-column>
       <el-table-column label="报销金额" align="center">
         <template slot-scope="{ row }">
           {{ Number(row.total_money) | 1000 }}
@@ -86,6 +90,7 @@
 import BaoXiaoDetail from './detail';
 import ReimburForm1 from './ReimburForm1';
 import ReimburForm2 from './ReimburForm2';
+import dayjs from 'dayjs';
 
 export default {
   components: {
@@ -120,6 +125,9 @@ export default {
     };
   },
   methods: {
+    timeFormatter(row, column, cellValue, index) {
+      return dayjs.unix(cellValue).format('YYYY-MM-DD HH:mm:ss');
+    },
     handleApply() {
       this.$router.push({ path: '/reimbur/add' });
     },
