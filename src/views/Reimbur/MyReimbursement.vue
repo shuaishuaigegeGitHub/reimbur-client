@@ -214,7 +214,6 @@ export default {
       this.drawer.processList = res.data.processList;
       this.drawer.detailList = res.data.detailList;
       this.drawer.copys = res.data.copys;
-      console.log(res.data);
     },
     async query() {
       const res = await this.$axios({

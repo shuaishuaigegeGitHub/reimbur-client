@@ -25,20 +25,19 @@
       </el-col>
     </el-row>
     <el-table :data="list" border>
-      <el-table-column label="申请人" prop="applicant" align="center"></el-table-column>
-      <el-table-column label="付款类型" prop="flow_params.apply_type" align="center"></el-table-column>
+      <el-table-column label="申请人" prop="applicant_name" align="center"></el-table-column>
+      <el-table-column label="付款类型" prop="apply_type" align="center"></el-table-column>
       <el-table-column label="申请时间" prop="createtime" align="center"></el-table-column>
       <el-table-column label="结束时间" prop="updatetime" align="center"></el-table-column>
       <el-table-column label="报销金额" align="center">
         <template slot-scope="{ row }">
-          {{ Number(row.flow_params.total_money) | 1000 }}
+          {{ Number(row.total_money) | 1000 }}
         </template>
       </el-table-column>
+      <el-table-column label="申请事由" prop="reason" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" @click="handleShow(row)">{{
-            row.status == 1 && !row.refext ? '审批' : '查看'
-          }}</el-button>
+          <el-button type="primary" size="small" @click="handleShow(row)">查看</el-button>
           <el-button size="small" @click="handlePrint(row)">打印</el-button>
         </template>
       </el-table-column>
@@ -61,8 +60,10 @@
       <div class="drawer-body">
         <bao-xiao-detail
           class="bao-xiao-detail"
-          :style="{ height: baoxiaoHeight }"
           :data="drawer.data"
+          :processList="drawer.processList"
+          :detailList="drawer.detailList"
+          :copys="drawer.copys"
         ></bao-xiao-detail>
       </div>
     </el-drawer>
@@ -71,12 +72,12 @@
       <div align="center">
         <el-radio-group v-model="print.type">
           <el-radio-button label="1">费用报销单</el-radio-button>
-          <!-- <el-radio-button label="2">差旅费用报销单</el-radio-button> -->
-          <el-radio-button label="3">报销单</el-radio-button>
+          <el-radio-button label="2">报销单</el-radio-button>
+          <!-- <el-radio-button label="3">差旅费用报销单</el-radio-button> -->
         </el-radio-group>
       </div>
-      <ReimburForm1 v-show="print.type == 1" :form="print.data" :actList="print.actList"></ReimburForm1>
-      <ReimburForm2 v-show="print.type == 3" :form="print.data" :actList="print.actList"></ReimburForm2>
+      <ReimburForm1 v-show="print.type == 1" :form="print.data"></ReimburForm1>
+      <ReimburForm2 v-show="print.type == 2" :form="print.data" :processList="print.processList"></ReimburForm2>
     </el-dialog>
   </div>
 </template>
@@ -85,7 +86,6 @@
 import BaoXiaoDetail from './detail';
 import ReimburForm1 from './ReimburForm1';
 import ReimburForm2 from './ReimburForm2';
-import Bus from '@/utils/bus';
 
 export default {
   components: {
@@ -101,29 +101,23 @@ export default {
       filters: {
         applyTime: null,
         page: 1,
-        size: 10
+        size: 20
       },
       drawer: {
         visible: false,
-        data: {}
+        data: {},
+        processList: [],
+        detailList: [],
+        copys: []
       },
       print: {
         visible: false,
-        type: '3',
-        data: {
-          flow_params: {}
-        },
+        type: '1',
+        data: {},
         // 审批记录
-        actList: []
+        processList: []
       }
     };
-  },
-  computed: {
-    baoxiaoHeight() {
-      return this.drawer.data.status === 1 && this.drawer.data.refext === ''
-        ? 'calc(100vh - 300px)'
-        : 'calc(100vh - 100px)';
-    }
   },
   methods: {
     handleApply() {
@@ -132,6 +126,26 @@ export default {
     handleShow(row) {
       this.drawer.visible = true;
       this.drawer.data = row;
+      this.queryProcessDetail();
+    },
+    // 查看明细和流程
+    async queryProcessDetail() {
+      const res = await this.$axios({
+        url: '/api/reimbur/query-detail-process',
+        params: {
+          id: this.drawer.data.id
+        }
+      });
+      if (this.drawer.data.status == 2) {
+        res.data.processList.push({
+          flag: 2,
+          username: '报销流程结束',
+          msg: ''
+        });
+      }
+      this.drawer.processList = res.data.processList;
+      this.drawer.detailList = res.data.detailList;
+      this.drawer.copys = res.data.copys;
     },
     async query() {
       const res = await this.$axios({
@@ -144,20 +158,16 @@ export default {
     },
     // 打印预览
     async handlePrint(row) {
-      this.print.visible = true;
-      this.print.data = row;
       const res = await this.$axios({
-        url: '/api/reimbur/query-instance-process-status',
-        method: 'GET',
+        url: '/api/reimbur/query-detail-process',
         params: {
           id: row.id
         }
       });
-      // 去掉第一个
-      res.data.shift();
-      // 去掉最后一个
-      res.data.pop();
-      this.print.actList = res.data;
+      this.print.processList = res.data.processList;
+      row.detailList = res.data.detailList;
+      this.print.data = row;
+      this.print.visible = true;
     }
   },
   mounted() {
