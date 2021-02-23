@@ -125,15 +125,15 @@
 
       <el-divider></el-divider>
 
-      <!-- <div v-if="data.copys && data.copys.length" class="copy">
+      <div v-if="copys && copys.length" class="copy">
         <h3 class="copy-title">抄送人</h3>
         <div class="approve-wrap">
-          <div v-for="item in data.copys" :key="'copy-' + item.id" class="approve-item" align="center">
+          <div v-for="item in copys" :key="'copy-' + item.id" class="approve-item" align="center">
             <el-avatar shape="square" size="large" :src="item.avatar">{{ item.user_name.slice(0, 1) }}</el-avatar>
             <span>{{ item.user_name }}</span>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <div v-if="reEdit" align="center">
         <el-button type="primary" round style="width: 200px; margin-top: 20px" @click="handleEdit">重新编辑</el-button>
@@ -162,6 +162,12 @@ export default {
       }
     },
     processList: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
+    copys: {
       type: Array,
       default: () => {
         return [];

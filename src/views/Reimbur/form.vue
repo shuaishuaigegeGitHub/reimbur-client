@@ -199,6 +199,20 @@
             <el-option v-for="item in userList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+
+        <el-form-item label="抄送人：">
+          <div class="approve-wrap">
+            <div v-for="(item, index) in form.copys" :key="'copy-' + item.id" class="approve-item">
+              <el-avatar shape="square" size="large" :src="item.avatar">{{ item.user_name.slice(0, 1) }}</el-avatar>
+              <span>{{ item.user_name }}</span>
+              <i class="el-icon-plus"></i>
+              <span class="fl-close" @click="handleDelCopy(index)">x</span>
+            </div>
+            <el-select v-model="copyUser" @change="handleSelectCopy" filterable placeholder="请选择抄送人">
+              <el-option v-for="item in copyList" :key="item.id" :label="item.user_name" :value="item.id"></el-option>
+            </el-select>
+          </div>
+        </el-form-item>
       </div>
 
       <div class="footer">
@@ -299,7 +313,8 @@ export default {
             receipt_number: ''
           }
         ],
-        reason: ''
+        reason: '',
+        copys: []
       },
       rules: {
         create_id: [{ required: true, message: '请选择填单人', trigger: 'blur' }],
@@ -333,6 +348,12 @@ export default {
         .reduce((prev, cur) => {
           return NP.plus(prev, cur);
         }, 0);
+    },
+    // 抄送人列表
+    copyList() {
+      return this.userList.filter(item => {
+        return !this.form.copys.find(approve => approve.id == item.id);
+      });
     }
   },
   methods: {
@@ -509,6 +530,16 @@ export default {
         const dept = this.deptList.find(item => user.dept_id_list.includes(item.id + ''));
         this.form.create_dept_id = dept.id;
       }
+    },
+    // 选择抄送人事件
+    handleSelectCopy(val) {
+      const user = this.userList.find(item => item.id === val);
+      this.form.copys.push(user);
+      this.copyUser = null;
+    },
+    // 删除抄送人
+    handleDelCopy(index) {
+      this.form.copys.splice(index, 1);
     }
   },
   async mounted() {

@@ -95,6 +95,7 @@
           :data="drawer.data"
           :processList="drawer.processList"
           :detailList="drawer.detailList"
+          :copys="drawer.copys"
           @refreshProcess="queryProcessDetail"
         ></bao-xiao-detail>
         <el-row v-if="drawer.data.task_status === 1 && drawer.data.refext == ''" class="detail-footer" :gutter="30">
@@ -196,7 +197,8 @@ export default {
         visible: false,
         data: {},
         processList: [],
-        detailList: []
+        detailList: [],
+        copys: []
       },
       print: {
         visible: false,
@@ -250,6 +252,7 @@ export default {
       }
       this.drawer.processList = res.data.processList;
       this.drawer.detailList = res.data.detailList;
+      this.drawer.copys = res.data.copys;
     },
     async query() {
       const res = await this.$axios({
