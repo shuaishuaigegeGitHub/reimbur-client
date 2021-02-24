@@ -37,7 +37,7 @@
     <el-table :data="list" border>
       <el-table-column label="申请人" prop="applicant_name" align="center"></el-table-column>
       <el-table-column label="期望交付日期" prop="date" align="center"></el-table-column>
-      <el-table-column label="状态" prop="status" align="center">
+      <el-table-column label="审批状态" prop="status" align="center">
         <template slot-scope="{ row }">
           <el-tag v-if="row.status === 1">待我审批</el-tag>
           <el-tag v-else-if="row.status === 2" type="success">已结束</el-tag>

@@ -97,7 +97,7 @@
         </div>
       </div>
 
-      <div v-if="reEdit || reStart" align="center">
+      <div v-if="reEdit" align="center">
         <el-button type="primary" round style="width: 200px; margin-top: 20px" @click="handleEdit">重新编辑</el-button>
       </div>
     </el-form>
@@ -128,16 +128,15 @@ export default {
   computed: {
     // 是否可以编辑，只有还未审批过的流程才可以编辑
     reEdit() {
-      let actLength = this.actList.length;
-      if (actLength !== 2) {
+      if (!this.myself || this.data.status === 2) {
         return false;
       }
-      actLength = this.actList.filter(act => act.flag === 1).length;
-      return this.myself && actLength === 1;
-    },
-    // 已取消，已驳回的采购单可以基于该采购单重新开始采购
-    reStart() {
-      return this.myself && (this.data.status == 3 || this.data.status == 4);
+      if (this.data.status == 3 || this.data.status == 4) {
+        return true;
+      }
+      let last = this.actList[this.actList.length - 1];
+      console.log(last);
+      return last && last.stage === 1;
     }
   },
   data() {

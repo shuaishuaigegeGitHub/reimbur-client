@@ -40,7 +40,7 @@
           {{ row.apply_type == 1 ? '正常请款' : '预付请款' }}
         </template>
       </el-table-column>
-      <el-table-column label="任务状态" prop="task_status" align="center">
+      <el-table-column label="审批状态" prop="task_status" align="center">
         <template slot-scope="{ row }">
           <el-tag v-if="row.task_status === 1">
             {{ row.refext ? '已转账' : '待我审批' }}
