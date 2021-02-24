@@ -10,9 +10,6 @@
       <el-form-item label="申请事由：">
         {{ data.reasons }}
       </el-form-item>
-      <el-form-item label="备注：">
-        {{ data.remark }}
-      </el-form-item>
       <el-form-item label="图片：">
         <div class="image-wrap">
           <div class="image-item" v-for="(item, index) in data.images" :key="index">
@@ -28,6 +25,9 @@
       <el-form-item label="总采购金额：">
         <span class="money-color">{{ Number(data.total_money) | 1000 }}</span>
         元
+      </el-form-item>
+      <el-form-item label="备注：">
+        <div class="wang-editor-content" v-html="data.remark"></div>
       </el-form-item>
 
       <div class="detail-body">

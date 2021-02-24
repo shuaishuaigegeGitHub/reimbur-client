@@ -14,9 +14,6 @@
       <el-form-item label="申请事由：" prop="reasons">
         <el-input v-model="form.reasons" type="textarea" placeholder="请输入采购事由"></el-input>
       </el-form-item>
-      <el-form-item label="备注：">
-        <el-input v-model="form.remark" type="textarea" placeholder="请输入"></el-input>
-      </el-form-item>
       <el-form-item label="图片：">
         <div class="image-wrap">
           <div class="image-item" v-for="(item, index) in form.images" :key="index">
@@ -41,6 +38,9 @@
             </el-upload>
           </div>
         </div>
+      </el-form-item>
+      <el-form-item label="备注：">
+        <div id="purchaseRemark"></div>
       </el-form-item>
 
       <h3 align="center">采购明细</h3>
@@ -135,10 +135,11 @@
 
 <script>
 import NP from 'number-precision';
-import { getAllUser, getAllDept } from '@/api/index';
+import { getAllUser } from '@/api/index';
 import config from '@/config';
 import { getToken } from '@/utils/auth';
 import { v4 as uuidv4 } from 'uuid';
+import wangEditor from 'wangeditor';
 
 export default {
   props: {
@@ -149,6 +150,9 @@ export default {
       if (val) {
         this.form = val;
         this.edit = true;
+        if (this.editor) {
+          this.editor.txt.html(this.form.remark);
+        }
       }
     }
   },
@@ -219,7 +223,9 @@ export default {
       },
 
       // 定时器
-      timer: null
+      timer: null,
+      // 富文本对象
+      editor: null
     };
   },
   computed: {
@@ -380,9 +386,22 @@ export default {
           }, 3000);
         }
       }, 1000);
+    },
+    initEditor() {
+      this.editor = new wangEditor('#purchaseRemark');
+      this.editor.config.onchange = newHtml => {
+        this.form.remark = newHtml;
+        console.log('改变了：', this.form.remark);
+      };
+      this.editor.config.height = 300;
+      this.editor.config.zIndex = 1000;
+      this.editor.config.excludeMenus = ['image', 'video', 'emoticon'];
+      this.editor.create();
+      this.editor.txt.html(this.form.remark);
     }
   },
   async mounted() {
+    this.initEditor();
     this.userList = await getAllUser();
   },
   activated() {

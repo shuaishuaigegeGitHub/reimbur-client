@@ -36,10 +36,10 @@ a {
   text-decoration: none;
 }
 
-ul,
+/* ul,
 li {
   list-style: none;
-}
+} */
 
 .content-box {
   position: absolute;
