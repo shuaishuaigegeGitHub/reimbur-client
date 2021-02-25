@@ -96,7 +96,7 @@
           </el-table-column>
           <el-table-column label="物品名称" prop="name" align="center">
             <template slot-scope="{ row }">
-              <el-tooltip v-if="row.remark" effect="dark" :content="row.remark" placement="top-start">
+              <el-tooltip v-if="row.remark" effect="dark" :content="row.remark" placement="top">
                 <span>{{ row.name }}</span>
               </el-tooltip>
               <span v-else>{{ row.name }}</span>
@@ -132,14 +132,7 @@
 
       <div v-if="purchase.show">
         <div>
-          <h3 class="title">
-            <el-row>
-              <el-col :span="12">基本信息</el-col>
-              <el-col :span="12" align="right">
-                <el-button v-if="reEdit" type="text" style="margin-right: 10px" @click="handleEdit">重新编辑</el-button>
-              </el-col>
-            </el-row>
-          </h3>
+          <h3 class="title">基本信息</h3>
           <el-form label-width="150px" label-position="left">
             <el-form-item>
               <span class="label" slot="label"> <i class="el-icon-user"></i> 申请人</span>
