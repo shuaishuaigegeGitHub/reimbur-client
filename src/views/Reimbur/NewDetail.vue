@@ -121,7 +121,7 @@
         </el-table>
       </div>
 
-      <div v-if="data.p_id" style="line-height: 2rem; margin-top: 20px" align="center">
+      <div v-if="data.p_id && purchase.data" style="line-height: 2rem; margin-top: 20px" align="center">
         <el-button v-show="!purchase.show" type="text" @click="purchase.show = true">
           展开关联的采购单 <i class="el-icon-arrow-down"></i>
         </el-button>
@@ -130,27 +130,75 @@
         </el-button>
       </div>
 
-      <div v-if="purchase.show" style="padding-right: 10px">
-        <h3 class="title">采购明细</h3>
-        <el-table :data="detailList" border size="mini">
-          <el-table-column label="物品名称" prop="name" align="center"></el-table-column>
-          <el-table-column label="单价" prop="money" align="center">
-            <template slot-scope="{ row }">
-              {{ Number(row.money) | 1000 }}
-            </template>
-          </el-table-column>
-          <el-table-column label="数量" prop="number" align="center">
-            <template slot-scope="{ row }">
-              {{ row.number + ' ' + row.unit }}
-            </template>
-          </el-table-column>
-          <el-table-column label="总价" prop="number" align="center">
-            <template slot-scope="{ row }">
-              {{ calTotalMoney(row.money, row.number) }}
-            </template>
-          </el-table-column>
-          <el-table-column label="备注" prop="remark" align="center"></el-table-column>
-        </el-table>
+      <div v-if="purchase.show">
+        <div>
+          <h3 class="title">
+            <el-row>
+              <el-col :span="12">基本信息</el-col>
+              <el-col :span="12" align="right">
+                <el-button v-if="reEdit" type="text" style="margin-right: 10px" @click="handleEdit">重新编辑</el-button>
+              </el-col>
+            </el-row>
+          </h3>
+          <el-form label-width="150px" label-position="left">
+            <el-form-item>
+              <span class="label" slot="label"> <i class="el-icon-user"></i> 申请人</span>
+              {{ purchase.data.applicant_name }}
+            </el-form-item>
+            <el-form-item>
+              <span class="label" slot="label"> <i class="el-icon-date"></i> 期望交付日期</span>
+              {{ data.date }}
+            </el-form-item>
+            <el-form-item>
+              <span class="label" slot="label"> <i class="el-icon-edit-outline"></i> 报销事由</span>
+              {{ purchase.data.reasons }}
+            </el-form-item>
+            <el-form-item>
+              <span class="label" slot="label"> <i class="el-icon-money"></i> 总采购金额</span>
+              <span class="money-color">￥{{ Number(purchase.data.total_money) | 1000 }}</span> 元
+            </el-form-item>
+            <el-form-item>
+              <span class="label" slot="label"> <i class="el-icon-chat-dot-round"></i> 备注</span>
+              {{ purchase.data.remark }}
+            </el-form-item>
+            <el-form-item>
+              <span class="label" slot="label"> <i class="el-icon-picture"></i> 图片</span>
+              <div class="image-wrap">
+                <div class="image-item" v-for="(item, index) in purchase.data.images" :key="index">
+                  <el-image
+                    style="width: 80px; height: 80px"
+                    fit="cover"
+                    :src="item"
+                    :preview-src-list="purchase.data.images"
+                  ></el-image>
+                </div>
+              </div>
+            </el-form-item>
+          </el-form>
+        </div>
+
+        <div style="padding-right: 10px">
+          <h3 class="title">采购明细</h3>
+          <el-table :data="purchase.data.detailList" border size="mini">
+            <el-table-column label="物品名称" prop="name" align="center"></el-table-column>
+            <el-table-column label="单价" prop="money" align="center">
+              <template slot-scope="{ row }">
+                {{ Number(row.money) | 1000 }}
+              </template>
+            </el-table-column>
+            <el-table-column label="数量" prop="number" align="center">
+              <template slot-scope="{ row }">
+                {{ row.number + ' ' + row.unit }}
+              </template>
+            </el-table-column>
+            <el-table-column label="总价" prop="number" align="center">
+              <template slot-scope="{ row }">
+                {{ calTotalMoney(row.money, row.number) }}
+              </template>
+            </el-table-column>
+            <el-table-column label="备注" prop="remark" align="center"></el-table-column>
+          </el-table>
+        </div>
       </div>
 
       <slot name="approve"></slot>
@@ -245,9 +293,16 @@ export default {
 
       purchase: {
         show: false,
-        data: {}
+        data: null
       }
     };
+  },
+  watch: {
+    data: function() {
+      this.purchase.show = false;
+      this.purchase.data = null;
+      this.queryPurchase();
+    }
   },
   computed: {
     // 已取消，已驳回的报销单可以基于该报销单重新开始报销
@@ -366,10 +421,20 @@ export default {
           subject_id: row.subject_id
         }
       });
+    },
+    // 查询关联的采购单
+    async queryPurchase() {
+      if (this.data.p_id) {
+        const res = await this.$axios({
+          url: '/api/reimbur/purchase/' + this.data.p_id
+        });
+        this.purchase.data = res.data;
+      }
     }
   },
   mounted() {
     this.querySubjectData();
+    this.queryPurchase();
   }
 };
 </script>
@@ -400,6 +465,14 @@ export default {
 
     .el-form {
       margin-left: 20px;
+    }
+
+    .image-wrap {
+      display: flex;
+
+      .image-item {
+        margin-right: 10px;
+      }
     }
   }
   .main-right {

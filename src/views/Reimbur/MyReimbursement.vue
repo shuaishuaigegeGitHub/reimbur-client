@@ -93,7 +93,7 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="报销详情" :visible.sync="drawer.visible" width="1200px" :close-on-click-modal="false" top="10vh">
+    <el-dialog title="报销详情" :visible.sync="drawer.visible" width="1200px" :close-on-press-escape="false" top="10vh">
       <ReimburDetail
         :data="drawer.data"
         :processList="drawer.processList"
