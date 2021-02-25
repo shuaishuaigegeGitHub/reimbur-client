@@ -93,18 +93,6 @@
       </el-pagination>
     </div>
 
-    <!-- <el-drawer title="报销申请单" :visible.sync="drawer.visible" direction="rtl" size="500px">
-      <BaoXiaoDetail
-        class="bao-xiao-detail"
-        :data="drawer.data"
-        :processList="drawer.processList"
-        :detailList="drawer.detailList"
-        :copys="drawer.copys"
-        myself
-        @close="handleCloseDetail"
-      ></BaoXiaoDetail>
-    </el-drawer> -->
-
     <el-dialog title="报销详情" :visible.sync="drawer.visible" width="1200px" :close-on-click-modal="false" top="10vh">
       <ReimburDetail
         :data="drawer.data"
@@ -114,23 +102,6 @@
         @refresh="queryProcessDetail"
         myself
       >
-        <!-- <div slot="approve" class="approve-wrapper">
-          <div class="comment-wrapper">
-            <el-input
-              v-model.trim="form.remark"
-              type="textarea"
-              resize="none"
-              placeholder="输入驳回理由或者同意备注，例如：发票号不正确！"
-              maxlength="255"
-              show-word-limit
-              rows="4"
-            ></el-input>
-          </div>
-          <div align="right" class="footer-button">
-            <el-button type="text" icon="el-icon-close" class="red-color" style="margin-right: 15px">驳 回</el-button>
-            <el-button type="text" icon="el-icon-check">同 意</el-button>
-          </div>
-        </div> -->
       </ReimburDetail>
     </el-dialog>
 
@@ -149,7 +120,6 @@
 </template>
 
 <script>
-import BaoXiaoDetail from './detail';
 import ReimburDetail from './NewDetail';
 import ReimburForm1 from './ReimburForm1';
 import ReimburForm2 from './ReimburForm2';
@@ -157,7 +127,6 @@ import dayjs from 'dayjs';
 
 export default {
   components: {
-    // BaoXiaoDetail,
     ReimburForm1,
     ReimburForm2,
     ReimburDetail

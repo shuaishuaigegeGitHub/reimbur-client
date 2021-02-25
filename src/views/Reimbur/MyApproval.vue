@@ -90,45 +90,43 @@
       </el-pagination>
     </div>
 
-    <el-drawer title="报销申请单" :visible.sync="drawer.visible" direction="rtl" size="500px">
-      <div class="drawer-body">
-        <bao-xiao-detail
-          ref="reimburDetail"
-          class="bao-xiao-detail"
-          :style="{ height: baoxiaoHeight }"
-          :data="drawer.data"
-          :processList="drawer.processList"
-          :detailList="drawer.detailList"
-          :copys="drawer.copys"
-          @refreshProcess="queryProcessDetail"
-        ></bao-xiao-detail>
-        <el-row v-if="drawer.data.task_status === 1 && drawer.data.refext == ''" class="detail-footer" :gutter="30">
-          <el-col :span="24">
+    <el-dialog title="报销详情" :visible.sync="drawer.visible" width="1200px" :close-on-click-modal="false" top="10vh">
+      <ReimburDetail
+        :data="drawer.data"
+        :processList="drawer.processList"
+        :detailList="drawer.detailList"
+        :copys="drawer.copys"
+        @refresh="queryProcessDetail"
+      >
+        <div v-if="drawer.data.task_status === 1 && drawer.data.refext == ''" slot="approve" class="approve-wrapper">
+          <div class="comment-wrapper">
             <el-input
               v-model.trim="form.remark"
               type="textarea"
               resize="none"
+              placeholder="输入驳回理由或者同意备注，例如：发票号不正确！"
+              maxlength="255"
+              show-word-limit
               rows="4"
-              placeholder="输入驳回信息，例如：衣服不能报销"
             ></el-input>
-          </el-col>
-
-          <el-col :span="12">
-            <el-button style="width: 100%" @click="handleReject">驳 回</el-button>
-          </el-col>
-          <el-col :span="12">
+          </div>
+          <div align="right" class="footer-button">
+            <el-button type="danger" size="small" icon="el-icon-close" @click="handleReject" style="margin-right: 15px"
+              >驳 回</el-button
+            >
             <el-button
               v-if="drawer.data.stage === 'stage-transfer'"
-              style="width: 100%"
               type="primary"
+              size="small"
               @click="handleTransferShow"
+              icon="el-icon-coin"
               >转 账</el-button
             >
-            <el-button v-else style="width: 100%" type="primary" @click="handleThen">同 意</el-button>
-          </el-col>
-        </el-row>
-      </div>
-    </el-drawer>
+            <el-button v-else type="primary" size="small" icon="el-icon-check" @click="handleThen">同 意</el-button>
+          </div>
+        </div>
+      </ReimburDetail>
+    </el-dialog>
 
     <el-dialog :visible.sync="print.visible" title="报销单" width="800px">
       <div align="center">
@@ -142,7 +140,7 @@
       <ReimburForm2 v-show="print.type == 2" :form="print.data" :processList="print.processList"></ReimburForm2>
     </el-dialog>
 
-    <el-dialog :visible.sync="transfer.visible" title="转账" width="850px" :close-on-click-modal="false">
+    <el-dialog :visible.sync="transfer.visible" title="转账" width="850px" :close-on-click-modal="false" top="10vh">
       <el-form label-width="100px" :model="transfer" ref="transferForm" :rules="transferRules">
         <el-form-item label="打款单位：">{{ drawer.data.payee }}</el-form-item>
         <el-form-item label="银行卡号：">{{ drawer.data.bank_account }}</el-form-item>
@@ -202,7 +200,7 @@
 </template>
 
 <script>
-import BaoXiaoDetail from './detail';
+import ReimburDetail from './NewDetail';
 import ReimburForm1 from './ReimburForm1';
 import ReimburForm2 from './ReimburForm2';
 import Bus from '@/utils/bus';
@@ -210,9 +208,9 @@ import dayjs from 'dayjs';
 
 export default {
   components: {
-    BaoXiaoDetail,
     ReimburForm1,
-    ReimburForm2
+    ReimburForm2,
+    ReimburDetail
   },
   data() {
     return {
@@ -392,8 +390,6 @@ export default {
           return this.$message.warning('打款前报销明细必须指定科目信息');
         }
       }
-      // 保存科目
-      this.$refs.reimburDetail.saveSubject();
       this.transfer.visible = true;
     },
     // 转账
@@ -503,6 +499,15 @@ export default {
 
   .active {
     background-color: aliceblue;
+  }
+}
+
+.approve-wrapper {
+  margin-top: 20px;
+  border-top: 1px solid #d3d3d3;
+
+  .footer-button {
+    padding-right: 15px;
   }
 }
 </style>

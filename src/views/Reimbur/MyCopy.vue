@@ -60,17 +60,16 @@
       </el-pagination>
     </div>
 
-    <el-drawer title="报销申请单" :visible.sync="drawer.visible" direction="rtl" size="500px">
-      <div class="drawer-body">
-        <bao-xiao-detail
-          class="bao-xiao-detail"
-          :data="drawer.data"
-          :processList="drawer.processList"
-          :detailList="drawer.detailList"
-          :copys="drawer.copys"
-        ></bao-xiao-detail>
-      </div>
-    </el-drawer>
+    <el-dialog title="报销详情" :visible.sync="drawer.visible" width="1200px" :close-on-click-modal="false" top="10vh">
+      <ReimburDetail
+        :data="drawer.data"
+        :processList="drawer.processList"
+        :detailList="drawer.detailList"
+        :copys="drawer.copys"
+        @refresh="queryProcessDetail"
+      >
+      </ReimburDetail>
+    </el-dialog>
 
     <el-dialog :visible.sync="print.visible" title="报销单" width="800px">
       <div align="center">
@@ -87,16 +86,16 @@
 </template>
 
 <script>
-import BaoXiaoDetail from './detail';
+import ReimburDetail from './NewDetail';
 import ReimburForm1 from './ReimburForm1';
 import ReimburForm2 from './ReimburForm2';
 import dayjs from 'dayjs';
 
 export default {
   components: {
-    BaoXiaoDetail,
     ReimburForm1,
-    ReimburForm2
+    ReimburForm2,
+    ReimburDetail
   },
   data() {
     return {
