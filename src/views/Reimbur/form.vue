@@ -125,20 +125,10 @@
           <el-input v-model.trim="item.receipt_number" style="max-width: 500px"></el-input>
         </el-form-item>
         <el-form-item label="单价(元)：">
-          <el-input
-            v-model="item.money"
-            type="number"
-            style="max-width: 500px"
-            @change="handleMoneyChange(item)"
-          ></el-input>
+          <el-input v-model="item.money" style="max-width: 500px" @change="handleMoneyChange(item)"></el-input>
         </el-form-item>
         <el-form-item label="数量：">
-          <el-input
-            v-model="item.number"
-            type="number"
-            style="max-width: 500px"
-            @change="handleNumberChange(item)"
-          ></el-input>
+          <el-input v-model="item.number" style="max-width: 500px" @change="handleNumberChange(item)"></el-input>
         </el-form-item>
         <el-form-item label="单位：">
           <el-select
@@ -328,7 +318,7 @@ export default {
         bank_account: [{ required: true, message: '请输入银行卡号', trigger: 'blur' }],
         bank_name: [{ required: true, message: '请输入开户银行', trigger: 'blur' }],
         bank_address: [{ required: true, message: '请输入开户地址', trigger: 'blur' }],
-        reason: [{ required: true, message: '请输入开户地址', trigger: 'blur' }]
+        reason: [{ required: true, message: '请输入报销事由', trigger: 'blur' }]
       },
       // 发票号正则校验
       receipt_number_regex: /[A-Z0-9]{6,8}/,
@@ -418,10 +408,12 @@ export default {
       this.form.detailList.splice(index, 1);
     },
     handleMoneyChange(item) {
-      item.money = NP.round(item.money, 2);
+      let money = NP.round(parseFloat(item.money), 2) || 0;
+      item.money = money < 0 ? 0 : money;
     },
     handleNumberChange(item) {
-      item.number = NP.round(item.number, 0);
+      let number = parseInt(item.number) || 1;
+      item.number = number < 1 ? 1 : number;
     },
     validDetail(detail) {
       if (detail.number < 1) {

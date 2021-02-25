@@ -61,10 +61,10 @@
           <el-input v-model="item.norm" style="max-width: 500px"></el-input>
         </el-form-item>
         <el-form-item label="单价(元)：">
-          <el-input v-model="item.money" type="number" style="max-width: 500px"></el-input>
+          <el-input v-model="item.money" style="max-width: 500px" @change="handleMoneyChange(item)"></el-input>
         </el-form-item>
         <el-form-item label="数量：">
-          <el-input v-model="item.number" type="number" style="max-width: 500px"></el-input>
+          <el-input v-model="item.number" style="max-width: 500px" @change="handleNumberChange(item)"></el-input>
         </el-form-item>
         <el-form-item label="单位：">
           <el-select
@@ -262,6 +262,14 @@ export default {
         norm: '',
         unit: ''
       });
+    },
+    handleMoneyChange(item) {
+      let money = NP.round(parseFloat(item.money), 2) || 0;
+      item.money = money < 0 ? 0 : money;
+    },
+    handleNumberChange(item) {
+      let number = parseInt(item.number) || 1;
+      item.number = number < 1 ? 1 : number;
     },
     // 删除明细
     delDetail(index) {
