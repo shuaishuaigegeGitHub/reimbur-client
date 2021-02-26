@@ -152,7 +152,7 @@
             </el-form-item>
             <el-form-item>
               <span class="label" slot="label"> <i class="el-icon-chat-dot-round"></i> 备注</span>
-              {{ purchase.data.remark }}
+              <div class="wang-editor-content" v-html="purchase.data.remark"></div>
             </el-form-item>
             <el-form-item>
               <span class="label" slot="label"> <i class="el-icon-picture"></i> 图片</span>

@@ -11,6 +11,9 @@
       <el-tab-pane label="抄送给我" name="three">
         <MyCopy></MyCopy>
       </el-tab-pane>
+      <el-tab-pane label="采购明细" name="four">
+        <DetailList></DetailList>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -19,13 +22,15 @@
 import MyPurchase from './MyPurchase';
 import MyApproval from './MyApproval';
 import MyCopy from './MyCopy';
+import DetailList from './DetailList';
 import Bus from '@/utils/bus';
 
 export default {
   components: {
     MyPurchase,
     MyApproval,
-    MyCopy
+    MyCopy,
+    DetailList
   },
   data() {
     return {
