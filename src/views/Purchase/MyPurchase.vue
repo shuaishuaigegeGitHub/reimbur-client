@@ -63,10 +63,20 @@
       <el-table-column label="申请事由" prop="reasons" align="center"></el-table-column>
       <el-table-column label="操作" align="center" width="300">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" @click="handleShow(row)">查看</el-button>
-          <el-button type="danger" size="small" @click="handleCancel(row)" v-if="row.status == 1">取消</el-button>
-          <el-button type="success" size="small" @click="handleReimbur(row)" v-if="row.status == 2 && row.reimbur < 2"
+          <el-button type="primary" size="small" icon="el-icon-view" @click="handleShow(row)">查看</el-button>
+          <el-button size="small" icon="el-icon-close" @click="handleCancel(row)" v-if="row.status == 1"
+            >取消</el-button
+          >
+          <el-button
+            type="success"
+            size="small"
+            icon="el-icon-s-promotion"
+            @click="handleReimbur(row)"
+            v-if="row.status == 2 && row.reimbur < 2"
             >报销</el-button
+          >
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDel(row)" v-if="row.status == 3"
+            >删除</el-button
           >
         </template>
       </el-table-column>
@@ -171,6 +181,23 @@ export default {
     // 一键报销
     handleReimbur(row) {
       this.$router.push({ path: '/reimbur/add?pid=' + row.id });
+    },
+    // 删除操作
+    async handleDel(row) {
+      await this.$confirm('确定删除当前采购申请【相关联的采购明细也将删除，删除后无法恢复】？', {
+        type: 'warning',
+        confirmButtonText: '确定',
+        cancelButtonText: '关闭'
+      });
+      await this.$axios({
+        url: '/api/purchase/delete',
+        method: 'POST',
+        data: {
+          id: row.id
+        }
+      });
+      this.$message.success('操作成功');
+      this.query();
     }
   },
   activated() {
