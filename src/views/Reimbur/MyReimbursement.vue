@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import ReimburDetail from './NewDetail';
+import ReimburDetail from './Detail';
 import ReimburForm1 from './ReimburForm1';
 import ReimburForm2 from './ReimburForm2';
 import dayjs from 'dayjs';

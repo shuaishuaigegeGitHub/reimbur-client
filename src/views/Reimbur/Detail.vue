@@ -300,10 +300,13 @@ export default {
   computed: {
     // 已取消，已驳回的报销单可以基于该报销单重新开始报销
     reEdit() {
-      if (this.myself && (this.data.status == 3 || this.data.status == 4)) {
+      if (this.data.payment || !this.myself) {
+        return false;
+      }
+      if (this.data.status == 3 || this.data.status == 4) {
         return true;
       }
-      return this.myself && this.data.stage == 'stage-dept';
+      return this.data.stage == 'stage-dept';
     },
     // 是否可编辑科目
     subjectEdit() {
