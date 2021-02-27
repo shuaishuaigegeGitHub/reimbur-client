@@ -495,11 +495,15 @@ export default {
       this.fillAUserId();
       // sessionStorage.setItem('reimbur:add', JSON.stringify(this.form));
     },
+    // 加载本地缓存数据
+    loadLocalData() {
+      let temp = sessionStorage.getItem('reimbur:add');
+      if (temp) {
+        this.form = JSON.parse(temp);
+      }
+    },
     // 申请人切换
     async handleChange(val) {
-      // const user = this.userList.find(item => item.id === val);
-      // const dept = this.deptList.find(item => user.dept_id_list.includes(item.id + ''));
-      // this.form.applicant_dept = dept.id;
       const res = await this.$axios({
         url: '/api/reimbur/base-data',
         params: {
