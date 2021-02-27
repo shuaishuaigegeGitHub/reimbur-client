@@ -61,10 +61,10 @@
       <el-table-column label="申请事由" prop="reasons" align="center"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="{ row }">
-          <el-button v-if="row.status == 1 && !row.refext" type="primary" size="small" @click="handleShow(row)">
+          <el-button v-if="row.status == 1" type="primary" icon="el-icon-s-check" size="small" @click="handleShow(row)">
             审批
           </el-button>
-          <el-button v-else type="primary" size="small" plain @click="handleShow(row)">
+          <el-button v-else type="primary" icon="el-icon-view" size="small" plain @click="handleShow(row)">
             查看
           </el-button>
         </template>

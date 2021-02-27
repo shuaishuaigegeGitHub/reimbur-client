@@ -67,12 +67,18 @@
         </template>
       </el-table-column>
       <el-table-column label="报销事由" prop="reason" align="center"></el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" header-align="center" width="200">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" @click="handleShow(row)">{{
-            row.task_status == 1 && !row.refext ? '审批' : '查看'
-          }}</el-button>
-          <el-button size="small" @click="handlePrint(row)">打印</el-button>
+          <el-button
+            v-if="row.task_status == 1 && !row.refext"
+            type="primary"
+            icon="el-icon-s-check"
+            size="small"
+            @click="handleShow(row)"
+            >审批</el-button
+          >
+          <el-button v-else type="primary" icon="el-icon-view" size="small" @click="handleShow(row)">查看</el-button>
+          <el-button size="small" icon="el-icon-document" @click="handlePrint(row)">打印</el-button>
         </template>
       </el-table-column>
     </el-table>

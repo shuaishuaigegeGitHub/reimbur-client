@@ -39,10 +39,10 @@
         </template>
       </el-table-column>
       <el-table-column label="申请事由" prop="reason" align="center"></el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" header-align="center" width="200">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" @click="handleShow(row)">查看</el-button>
-          <el-button size="small" @click="handlePrint(row)">打印</el-button>
+          <el-button type="primary" icon="el-icon-view" size="small" @click="handleShow(row)">查看</el-button>
+          <el-button size="small" icon="el-icon-document" @click="handlePrint(row)">打印</el-button>
         </template>
       </el-table-column>
     </el-table>

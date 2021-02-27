@@ -71,12 +71,16 @@
         </template>
       </el-table-column>
       <el-table-column label="报销事由" prop="reason" align="center" min-width="200px"></el-table-column>
-      <el-table-column label="操作" align="center" width="300">
+      <el-table-column label="操作" header-align="center" width="270">
         <template slot-scope="{ row }">
-          <el-button type="primary" size="small" @click="handleShow(row)">查看</el-button>
-          <el-button type="info" size="small" @click="handleCancel(row)" v-if="row.status == 1">取消</el-button>
-          <el-button size="small" @click="handlePrint(row)">打印</el-button>
-          <el-button type="danger" size="small" @click="handleDel(row)" v-if="row.status == 3">删除</el-button>
+          <el-button type="primary" icon="el-icon-view" size="small" @click="handleShow(row)">查看</el-button>
+          <el-button size="small" icon="el-icon-document" @click="handlePrint(row)">打印</el-button>
+          <el-button type="info" icon="el-icon-close" size="small" @click="handleCancel(row)" v-if="row.status == 1"
+            >取消</el-button
+          >
+          <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDel(row)" v-if="row.status == 3"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>

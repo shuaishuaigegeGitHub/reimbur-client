@@ -61,11 +61,14 @@
         </template>
       </el-table-column>
       <el-table-column label="申请事由" prop="reasons" align="center"></el-table-column>
-      <el-table-column label="操作" align="center" width="300">
+      <el-table-column label="操作" header-align="center" width="200">
         <template slot-scope="{ row }">
           <el-button type="primary" size="small" icon="el-icon-view" @click="handleShow(row)">查看</el-button>
           <el-button size="small" icon="el-icon-close" @click="handleCancel(row)" v-if="row.status == 1"
             >取消</el-button
+          >
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDel(row)" v-if="row.status == 3"
+            >删除</el-button
           >
           <el-button
             type="success"
@@ -74,9 +77,6 @@
             @click="handleReimbur(row)"
             v-if="row.status == 2 && row.reimbur < 2"
             >报销</el-button
-          >
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDel(row)" v-if="row.status == 3"
-            >删除</el-button
           >
         </template>
       </el-table-column>
