@@ -98,6 +98,20 @@ export default {
     .descriptor {
       margin-left: 0px;
     }
+
+    .descriptor-content {
+      padding: 20px;
+      background-color: #d8f9c6;
+      font-weight: 400;
+
+      li {
+        line-height: 30px;
+      }
+
+      ol {
+        margin-left: 20px;
+      }
+    }
   }
 }
 </style>

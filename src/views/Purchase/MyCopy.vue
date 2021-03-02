@@ -60,21 +60,14 @@
       </el-pagination>
     </div>
 
-    <el-drawer
-      title="采购申请单"
-      :visible.sync="drawer.visible"
-      direction="rtl"
-      size="500px"
-      :close-on-press-escape="false"
-    >
-      <PurchaseDetail class="purchase-detail" :data="drawer.data" myself @close="handleCloseDetail"></PurchaseDetail>
-    </el-drawer>
+    <el-dialog title="采购申请单" :visible.sync="drawer.visible" :close-on-press-escape="false">
+      <PurchaseDetail :data="drawer.data" @close="handleCloseDetail"></PurchaseDetail>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import PurchaseDetail from './Detail';
-import NP from 'number-precision';
+import PurchaseDetail from './NewDetail';
 
 export default {
   components: {

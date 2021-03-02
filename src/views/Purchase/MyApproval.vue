@@ -84,62 +84,58 @@
       </el-pagination>
     </div>
 
-    <el-drawer
-      title="采购申请单"
-      :visible.sync="drawer.visible"
-      direction="rtl"
-      size="600px"
-      :close-on-press-escape="false"
-    >
-      <div class="drawer-body">
-        <PurchaseDetail
-          ref="purchaseDetail"
-          class="purchase-detail"
-          :style="{ height: purchaseHeight }"
-          :data="drawer.data"
-        ></PurchaseDetail>
-        <el-row v-if="drawer.data.status === 1" class="detail-footer" :gutter="30">
-          <el-col :span="24">
-            <el-input
-              v-model.trim="form.remark"
-              type="textarea"
-              resize="none"
-              rows="4"
-              placeholder="输入同意或者驳回信息，例如：同意；或者：不同意，因为xx。"
-            ></el-input>
-          </el-col>
+    <el-dialog title="采购申请单" :visible.sync="drawer.visible" :close-on-press-escape="false">
+      <PurchaseDetail :data="drawer.data">
+        <div slot="approve">
+          <div v-if="drawer.data.status === 1" slot="approve" class="approve-wrapper">
+            <div class="comment-wrapper">
+              <el-input
+                v-model.trim="form.remark"
+                type="textarea"
+                resize="none"
+                placeholder="输入驳回理由或者同意备注，例如：这个东西不用买了！"
+                maxlength="255"
+                show-word-limit
+                rows="4"
+              ></el-input>
+            </div>
+            <div align="right" class="footer-button">
+              <el-button
+                type="danger"
+                size="small"
+                icon="el-icon-close"
+                @click="handleReject"
+                style="margin-right: 15px"
+                >驳 回</el-button
+              >
+              <el-button type="primary" size="small" icon="el-icon-check" @click="handleThen">同 意</el-button>
+            </div>
+          </div>
 
-          <el-col :span="12">
-            <el-button style="width: 100%" @click="handleReject">驳 回</el-button>
-          </el-col>
-          <el-col :span="12">
-            <el-button style="width: 100%" type="primary" @click="handleThen">同 意</el-button>
-          </el-col>
-        </el-row>
-
-        <el-row v-if="drawer.data.status === 2 && !drawer.data.reimbur" class="detail-footer" :gutter="30">
-          <el-col :span="24">
-            <el-input
-              v-model.trim="force.remark"
-              type="textarea"
-              resize="none"
-              rows="4"
-              placeholder="输入强制驳回意见"
-            ></el-input>
-          </el-col>
-
-          <el-col>
-            <el-button type="danger" style="width: 100%;" @click="handleForceReject">强 制 驳 回</el-button>
-          </el-col>
-        </el-row>
-      </div>
-    </el-drawer>
+          <div v-if="drawer.data.status === 2 && !drawer.data.reimbur" class="detail-footer" :gutter="30">
+            <div class="comment-wrapper">
+              <el-input
+                v-model.trim="force.remark"
+                type="textarea"
+                resize="none"
+                placeholder="输入强制驳回意见，例如：这个东西不用买了！"
+                maxlength="255"
+                show-word-limit
+                rows="4"
+              ></el-input>
+            </div>
+            <div align="right" class="footer-button">
+              <el-button type="primary" size="small" icon="el-icon-check" @click="handleForceReject">同 意</el-button>
+            </div>
+          </div>
+        </div>
+      </PurchaseDetail>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import PurchaseDetail from './Detail';
-import NP from 'number-precision';
+import PurchaseDetail from './NewDetail';
 import Bus from '@/utils/bus';
 
 export default {
@@ -310,6 +306,15 @@ export default {
     .el-col {
       margin-top: 20px;
     }
+  }
+}
+
+.approve-wrapper {
+  margin-top: 20px;
+  border-top: 1px solid #d3d3d3;
+
+  .footer-button {
+    padding-right: 15px;
   }
 }
 </style>
