@@ -85,9 +85,9 @@
     </div>
 
     <el-dialog title="采购申请单" :visible.sync="drawer.visible" :close-on-press-escape="false" width="1200px">
-      <PurchaseDetail :data="drawer.data">
+      <PurchaseDetail ref="purchaseDetail" :data="drawer.data">
         <div slot="approve">
-          <div v-if="drawer.data.status === 1" slot="approve" class="approve-wrapper">
+          <div v-if="drawer.data.status === 1" class="approve-wrapper">
             <div class="comment-wrapper">
               <el-input
                 v-model.trim="form.remark"
@@ -112,7 +112,7 @@
             </div>
           </div>
 
-          <div v-if="drawer.data.status === 2 && !drawer.data.reimbur" class="detail-footer" :gutter="30">
+          <div v-if="drawer.data.status === 2 && !drawer.data.reimbur" class="approve-wrapper">
             <div class="comment-wrapper">
               <el-input
                 v-model.trim="force.remark"
@@ -125,7 +125,7 @@
               ></el-input>
             </div>
             <div align="right" class="footer-button">
-              <el-button type="primary" size="small" icon="el-icon-check" @click="handleForceReject">同 意</el-button>
+              <el-button type="danger" size="small" icon="el-icon-close" @click="handleForceReject">强制驳回</el-button>
             </div>
           </div>
         </div>
