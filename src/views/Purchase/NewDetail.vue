@@ -16,7 +16,7 @@
             {{ data.applicant_name }}
           </el-form-item>
           <el-form-item>
-            <span class="label" slot="label"> <i class="el-icon-price-tag"></i> 期望交付日期</span>
+            <span class="label" slot="label"> <i class="el-icon-date"></i> 期望交付日期</span>
             {{ data.date }}
           </el-form-item>
           <el-form-item>
@@ -28,7 +28,7 @@
             <span class="money-color">￥{{ Number(data.total_money) | 1000 }}</span> 元
           </el-form-item>
           <el-form-item>
-            <span class="label" slot="label"> <i class="el-icon-money"></i> 备注</span>
+            <span class="label" slot="label"> <i class="el-icon-chat-dot-round"></i> 备注</span>
             <div v-html="data.remark"></div>
           </el-form-item>
         </el-form>
@@ -36,7 +36,7 @@
 
       <div style="padding-right: 10px">
         <h3 class="title">采购明细</h3>
-        <el-table :data="details" border size="mini" style="width: 770px">
+        <el-table :data="details" border style="width: 770px">
           <el-table-column label="物品名称" prop="name" align="center">
             <template slot-scope="{ row }">
               <el-tooltip v-if="row.remark" effect="dark" :content="row.remark" placement="top">
@@ -60,6 +60,7 @@
               {{ calTotalMoney(row.money, row.number) }}
             </template>
           </el-table-column>
+          <el-table-column label="备注" prop="remark" align="center" show-overflow-tooltip></el-table-column>
         </el-table>
       </div>
 

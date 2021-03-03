@@ -84,7 +84,7 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="采购申请单" :visible.sync="drawer.visible" :close-on-press-escape="false">
+    <el-dialog title="采购申请单" :visible.sync="drawer.visible" :close-on-press-escape="false" width="1200px">
       <PurchaseDetail :data="drawer.data">
         <div slot="approve">
           <div v-if="drawer.data.status === 1" slot="approve" class="approve-wrapper">

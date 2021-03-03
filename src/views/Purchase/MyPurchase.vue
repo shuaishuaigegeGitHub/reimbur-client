@@ -95,7 +95,7 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="采购申请单" :visible.sync="drawer.visible" :close-on-press-escape="false">
+    <el-dialog title="采购申请单" :visible.sync="drawer.visible" :close-on-press-escape="false" width="1200px">
       <PurchaseDetail :data="drawer.data" myself @close="handleCloseDetail"></PurchaseDetail>
     </el-dialog>
   </div>
