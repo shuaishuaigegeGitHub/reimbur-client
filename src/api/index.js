@@ -41,8 +41,8 @@ export const getAllDept = async () => {
   });
   data = res.data
     .filter(item => {
-      // NOTE: 这里不好整，只能怪做OA的咸鱼了。
-      return item.dept_name.includes('部');
+      // ! 这里不好整，只能怪做OA的咸鱼了。
+      return item.dept_name.includes('部') || item.dept_name === '总裁办';
     })
     .map(item => {
       return {
