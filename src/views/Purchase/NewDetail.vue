@@ -31,6 +31,19 @@
             <span class="label" slot="label"> <i class="el-icon-chat-dot-round"></i> 备注</span>
             <div v-html="data.remark"></div>
           </el-form-item>
+          <el-form-item>
+              <span class="label" slot="label"> <i class="el-icon-picture"></i> 图片</span>
+              <div class="image-wrap">
+                <div class="image-item" v-for="(item, index) in data.images" :key="index">
+                  <el-image
+                    style="width: 80px; height: 80px"
+                    fit="cover"
+                    :src="item"
+                    :preview-src-list="data.images"
+                  ></el-image>
+                </div>
+              </div>
+            </el-form-item>
         </el-form>
       </div>
 
