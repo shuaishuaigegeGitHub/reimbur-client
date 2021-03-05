@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import PurchaseDetail from './NewDetail';
+import PurchaseDetail from './Detail';
 import Bus from '@/utils/bus';
 
 export default {

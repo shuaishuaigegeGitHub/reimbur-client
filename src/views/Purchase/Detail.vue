@@ -1,106 +1,126 @@
 <template>
   <div class="main">
-    <el-form label-width="120px">
-      <el-form-item label="申请人：">
-        {{ data.applicant_name }}
-      </el-form-item>
-      <el-form-item label="期望交付日期：">
-        {{ data.date }}
-      </el-form-item>
-      <el-form-item label="申请事由：">
-        {{ data.reasons }}
-      </el-form-item>
-      <el-form-item label="图片：">
-        <div class="image-wrap">
-          <div class="image-item" v-for="(item, index) in data.images" :key="index">
-            <el-image
-              style="width: 80px; height: 80px"
-              fit="cover"
-              :src="item"
-              :preview-src-list="data.images"
-            ></el-image>
-          </div>
-        </div>
-      </el-form-item>
-      <el-form-item label="总采购金额：">
-        <span class="money-color">{{ Number(data.total_money) | 1000 }}</span>
-        元
-      </el-form-item>
-      <el-form-item label="备注：">
-        <div class="wang-editor-content" v-html="data.remark"></div>
-      </el-form-item>
-
-      <div class="detail-body">
-        <div v-for="(item, index) in details" :key="index" class="detail-item">
-          <h4 class="detail-header">采购明细({{ index + 1 }})</h4>
-          <el-form-item label="物品名称：">
-            {{ item.name }}
+    <div class="main-left">
+      <div>
+        <h3 class="title">
+          <el-row>
+            <el-col :span="12">基本信息</el-col>
+            <el-col :span="12" align="right">
+              <el-button v-if="reEdit" type="text" style="margin-right: 10px" @click="handleEdit">重新编辑</el-button>
+            </el-col>
+          </el-row>
+        </h3>
+        <el-form label-width="150px" label-position="left">
+          <el-form-item>
+            <span class="label" slot="label"> <i class="el-icon-user"></i> 填单人</span>
+            {{ data.applicant_name }}
           </el-form-item>
-          <el-form-item label="规格：">
-            {{ item.norm }}
+          <el-form-item>
+            <span class="label" slot="label"> <i class="el-icon-date"></i> 期望交付日期</span>
+            {{ data.date }}
           </el-form-item>
-          <el-form-item label="单价：">
-            <span class="money-color">{{ Number(item.money) | 1000 }}</span>
-            元
+          <el-form-item>
+            <span class="label" slot="label"> <i class="el-icon-edit-outline"></i> 申请事由</span>
+            {{ data.reasons }}
           </el-form-item>
-          <el-form-item label="数量：">
-            <span>{{ item.number + ' ' + item.unit }}</span>
+          <el-form-item>
+            <span class="label" slot="label"> <i class="el-icon-money"></i> 总采购金额</span>
+            <span class="money-color">￥{{ Number(data.total_money) | 1000 }}</span> 元
           </el-form-item>
-          <el-form-item label="总价格：">
-            <span class="money-color">{{ calTotalMoney(item.money, item.number) }}</span>
-            元
+          <el-form-item>
+            <span class="label" slot="label"> <i class="el-icon-chat-dot-round"></i> 备注</span>
+            <div v-html="data.remark"></div>
           </el-form-item>
-          <div v-if="item.status == 1" class="detail-flag">
-            已报销
-          </div>
-        </div>
+          <el-form-item>
+              <span class="label" slot="label"> <i class="el-icon-picture"></i> 图片</span>
+              <div class="image-wrap">
+                <div class="image-item" v-for="(item, index) in data.images" :key="index">
+                  <el-image
+                    style="width: 80px; height: 80px"
+                    fit="cover"
+                    :src="item"
+                    :preview-src-list="data.images"
+                  ></el-image>
+                </div>
+              </div>
+            </el-form-item>
+        </el-form>
       </div>
 
-      <div class="workflow">
-        <h3 class="workflow-title">流程</h3>
-        <el-timeline>
-          <el-timeline-item v-for="(act, index) in actList" :key="index" :timestamp="act.time" :color="getColor(act)">
-            <h3 :style="{ color: act.flag === 2 ? '#838483' : '' }">{{ act.username + ' ' + act.msg }}</h3>
-            <div class="desc">
-              <span v-if="act.status"> （{{ getStatus(act) }}） </span>
-            </div>
-            <div v-if="act.remark" class="remark">{{ act.remark }}</div>
-          </el-timeline-item>
-        </el-timeline>
-        <div>
-          <div v-if="comment.visible" class="comment-wrap">
-            <el-input v-model="comment.form.remark" type="textarea" placeholder="请输入评论"></el-input>
-            <el-row style="margin-top: 10px">
-              <el-col :span="12" align="center">
-                <el-button round @click="comment.visible = false" style="width: 90%">关 闭</el-button>
-              </el-col>
-              <el-col :span="12" align="center">
-                <el-button type="primary" round @click="handleAddComment" style="width: 90%">发 送</el-button>
-              </el-col>
-            </el-row>
-          </div>
-          <div v-else align="center">
-            <el-button type="success" plain @click="comment.visible = true" icon="el-icon-plus">添加评论</el-button>
-          </div>
-        </div>
+      <div style="padding-right: 10px">
+        <h3 class="title">采购明细</h3>
+        <el-table :data="details" border style="width: 770px">
+          <el-table-column label="物品名称" prop="name" align="center">
+            <template slot-scope="{ row }">
+              <el-tooltip v-if="row.remark" effect="dark" :content="row.remark" placement="top">
+                <span>{{ row.name }}</span>
+              </el-tooltip>
+              <span v-else>{{ row.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="单价" prop="money" align="center">
+            <template slot-scope="{ row }">
+              {{ Number(row.money) | 1000 }}
+            </template>
+          </el-table-column>
+          <el-table-column label="数量" prop="number" align="center" width="80">
+            <template slot-scope="{ row }">
+              {{ row.number + ' ' + row.unit }}
+            </template>
+          </el-table-column>
+          <el-table-column label="总价" prop="number" align="center">
+            <template slot-scope="{ row }">
+              {{ calTotalMoney(row.money, row.number) }}
+            </template>
+          </el-table-column>
+          <el-table-column label="备注" prop="remark" align="center" show-overflow-tooltip></el-table-column>
+        </el-table>
       </div>
 
-      <el-divider></el-divider>
+      <slot name="approve"></slot>
+    </div>
 
-      <div v-if="data.copys && data.copys.length" class="copy">
-        <h3 class="copy-title">抄送人</h3>
-        <div class="approve-wrap">
-          <div v-for="item in data.copys" :key="'copy-' + item.id" class="approve-item" align="center">
+    <div class="main-right">
+      <div v-if="data.copys && data.copys.length" class="copy-wrapper">
+        <h4 class="title">抄送人</h4>
+        <div class="copy-content">
+          <div v-for="item in data.copys" :key="'copy-' + item.id" class="copy-item">
             <el-avatar shape="square" size="large" :src="item.avatar">{{ item.user_name.slice(0, 1) }}</el-avatar>
             <span>{{ item.user_name }}</span>
           </div>
         </div>
       </div>
 
-      <div v-if="reEdit" align="center">
-        <el-button type="primary" round style="width: 200px; margin-top: 20px" @click="handleEdit">重新编辑</el-button>
+      <div class="process-wrapper">
+        <h4 class="title">流程动态</h4>
+        <div v-for="(act, index) in actList" :key="index" class="process-item">
+          <span class="process-icon">
+            <i :class="getIcon(act)"></i>
+          </span>
+          <div class="process-content">
+            <p>{{ act.username }} {{ act.msg }}</p>
+            <p class="process-content-remark">
+              {{ act.remark }}
+            </p>
+          </div>
+          <dir class="process-time">{{ act.time }}</dir>
+        </div>
+        <div style="height: 100px"></div>
       </div>
-    </el-form>
+
+      <div class="comment-wrapper">
+        <el-input
+          v-model.trim="commentForm"
+          type="textarea"
+          resize="none"
+          placeholder="输入评论，按Enter发送评论"
+          maxlength="255"
+          show-word-limit
+          rows="4"
+          @keyup.enter.native="handleAddComment"
+        ></el-input>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -135,7 +155,6 @@ export default {
         return true;
       }
       let last = this.actList[this.actList.length - 1];
-      console.log(last);
       return last && last.stage === 1;
     }
   },
@@ -149,27 +168,10 @@ export default {
       // 明细数据
       details: [],
 
-      comment: {
-        visible: false,
-        form: {
-          remark: ''
-        }
-      }
+      commentForm: ''
     };
   },
   methods: {
-    getColor(row) {
-      switch (row.flag) {
-        case 1:
-          return '#409eff';
-        case 3:
-          return 'red';
-        case 4:
-          return 'red';
-        default:
-          return null;
-      }
-    },
     async query() {
       if (this.data.id) {
         this.actList = [];
@@ -187,34 +189,30 @@ export default {
     calTotalMoney(money, number) {
       return filter['1000'](NP.times(money, number));
     },
-    getStatus(act) {
-      if (act.transfer) {
-        if (act.status === 1) {
-          return '转账中';
-        } else if (act.status === 2) {
-          return '已到账';
-        }
+    getIcon(item) {
+      let flag = item.flag;
+      if (flag == 1) {
+        return 'el-icon-chat-dot-round green-color';
+      } else if (flag == 0) {
+        return 'el-icon-coordinate';
+      } else if (flag == 3 || flag == 4) {
+        return 'el-icon-circle-close red-color';
       }
-      let status = act.status;
-      switch (status) {
-        case 1:
-          return '审批中';
-        case 2:
-          return '审批通过';
-        case 3:
-          return '已取消';
-        case 4:
-          return '已驳回';
-        default:
-          return '未知';
+      if (item.msg.includes('编辑')) {
+        return 'el-icon-edit-outline blue-color';
+      } else if (item.msg.includes('发起')) {
+        return 'el-icon-s-promotion blue-color';
+      } else if (item.msg.includes('结束')) {
+        return 'el-icon-switch-button blue-color';
       }
+      return 'el-icon-circle-check blue-color';
     },
     handleEdit() {
       this.$emit('close');
       this.$router.push({ path: '/purchase/edit/' + this.data.id });
     },
     async handleAddComment() {
-      if (this.comment.form.remark === '') {
+      if (this.commentForm === '') {
         return this.$message.warning('请填写评论');
       }
       await this.$axios({
@@ -222,13 +220,11 @@ export default {
         method: 'POST',
         data: {
           id: this.data.id,
-          remark: this.comment.form.remark
+          remark: this.commentForm
         }
       });
       this.query();
-      this.$message.success('操作成功');
-      this.comment.form.remark = '';
-      this.comment.visible = false;
+      this.commentForm = '';
     }
   },
   mounted() {
@@ -239,88 +235,127 @@ export default {
 
 <style lang="scss" scoped>
 .main {
+  border-top: 1px solid #d3d3d3;
+  display: flex;
+  margin-top: -20px;
+
+  .label {
+    color: #999999;
+    margin-left: 10px;
+  }
+  .title {
+    color: #333333;
+    line-height: 2rem;
+    margin-top: 5px;
+  }
   .el-form-item {
     margin-bottom: 0px;
   }
 
-  .detail-body {
-    .detail-header {
-      background-color: #d7d8de;
-      line-height: 2rem;
-    }
+  .main-left {
+    flex-basis: 0;
+    flex-grow: 1;
+    border-right: 1px solid #d3d3d3;
 
-    .detail-item {
-      position: relative;
-
-      .detail-flag {
-        position: absolute;
-        top: 30px;
-        right: 0;
-        border: 1px solid #78f778;
-        width: 60px;
-        line-height: 60px;
-        text-align: center;
-        border-radius: 50%;
-        transform: rotate(30deg);
-        color: #7ec13b;
-      }
-    }
-  }
-
-  .detail-footer {
-    .el-col {
-      margin-top: 20px;
-    }
-  }
-
-  .workflow {
-    .workflow-title {
-      margin-top: 10px;
-      margin-bottom: 20px;
-      background-color: #b3d8ff;
-    }
-
-    .el-timeline {
+    .el-form {
       margin-left: 20px;
+    }
 
-      .desc {
-        color: #666666;
-      }
+    .image-wrap {
+      display: flex;
 
-      .remark {
-        background-color: #dadada;
-        padding: 10px;
+      .image-item {
+        margin-right: 10px;
       }
     }
   }
+  .main-right {
+    flex-basis: 400px;
+    position: relative;
 
-  .copy-title {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    background-color: #9ce0bd;
-  }
+    .copy-wrapper {
+      padding: 0 10px;
+      border-bottom: 1px solid #d3d3d3;
 
-  .approve-wrap {
-    display: flex;
+      .copy-content {
+        display: flex;
+        flex-wrap: wrap;
 
-    .approve-item {
-      width: 50px;
-      line-height: 20px;
-      margin-right: 20px;
-      position: relative;
+        .copy-item {
+          width: 50px;
+          line-height: 20px;
+          margin-right: 20px;
+          position: relative;
+        }
+      }
+    }
+
+    .process-wrapper {
+      padding: 0px 10px;
+      color: #999999;
+      font-weight: normal;
+
+      .process-item {
+        display: flex;
+        line-height: 1.5rem;
+        margin-bottom: 10px;
+
+        .process-icon {
+          flex-basis: 30px;
+          text-align: center;
+        }
+        .process-content {
+          flex-basis: 0;
+          flex-grow: 1;
+          color: #333333;
+
+          .process-content-remark {
+            border-left: 5px solid #999999;
+            padding-left: 5px;
+          }
+        }
+        .process-time {
+          flex-basis: 140px;
+          text-align: right;
+        }
+      }
+    }
+
+    .comment-wrapper {
+      border-top: 1px solid #d3d3d3;
+      position: absolute;
+      height: 100px;
+      width: 100%;
+      bottom: 0;
     }
   }
 
-  .image-wrap {
-    display: flex;
+  .money-color {
+    color: red;
+  }
+  .green-color {
+    color: #6ce270;
+  }
+  .blue-color {
+    color: #409eff;
+  }
+  .red-color {
+    color: red;
+  }
+}
+</style>
 
-    .image-item {
-      margin-right: 10px;
+<style lang="scss">
+.comment-wrapper {
+  .el-textarea {
+    .el-textarea__inner {
+      border: none;
     }
   }
 }
-
-.money-color {
-  color: red;
+.main-left {
+  .el-table .cell {
+    font-size: 12px;
+  }
 }
 </style>

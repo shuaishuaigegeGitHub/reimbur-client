@@ -106,6 +106,7 @@
         :copys="drawer.copys"
         @refresh="queryProcessDetail"
         myself
+        @close="handleCloseDetail"
       >
       </ReimburDetail>
     </el-dialog>

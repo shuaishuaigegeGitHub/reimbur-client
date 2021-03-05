@@ -402,7 +402,7 @@ export default {
         }
       ];
       this.form.reason = '';
-      this.form.p_id = null;
+      this.form.p_id = 0;
     },
     delDetail(index) {
       this.form.detailList.splice(index, 1);

@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import PurchaseDetail from './NewDetail';
+import PurchaseDetail from './Detail';
 
 export default {
   components: {
